@@ -42,6 +42,15 @@ class Shilpi_OS_Stage_Changer {
 	}
 
 	/**
+	 * Whether stage emails are suppressed in this request.
+	 *
+	 * @return bool
+	 */
+	public static function emails_suppressed() {
+		return self::$suppress;
+	}
+
+	/**
 	 * Stage dates for an order: stage key => Unix timestamp.
 	 *
 	 * @param WC_Order $order Order.

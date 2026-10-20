@@ -76,10 +76,15 @@ class Shilpi_OS_Stages {
 		 */
 		$stages = apply_filters( 'shilpi_os_stages', $stages );
 
-		$colors = Shilpi_OS_Settings::get( 'colors' );
+		// Labels and colours customised in the settings page.
 		foreach ( $stages as $key => $stage ) {
-			if ( ! empty( $colors[ $key ] ) ) {
-				$stages[ $key ]['color'] = $colors[ $key ];
+			$label = Shilpi_OS_Settings::get( 'label_' . $key );
+			$color = Shilpi_OS_Settings::get( 'color_' . $key );
+			if ( is_string( $label ) && '' !== trim( $label ) ) {
+				$stages[ $key ]['label'] = $label;
+			}
+			if ( is_string( $color ) && sanitize_hex_color( $color ) ) {
+				$stages[ $key ]['color'] = $color;
 			}
 		}
 		return $stages;
@@ -142,6 +147,40 @@ class Shilpi_OS_Stages {
 		$stages = self::get_stages();
 		$key    = self::strip( $status );
 		return isset( $stages[ $key ] ) ? $stages[ $key ]['label'] : wc_get_order_status_name( $key );
+	}
+
+	/**
+	 * Timeline steps for an order.
+	 *
+	 * Each step: key, label, short, state (done|current|upcoming), date (timestamp or null).
+	 *
+	 * @param WC_Order    $order Order.
+	 * @param string|null $stage Stage to show as current (defaults to the order status).
+	 * @return array
+	 */
+	public static function timeline( $order, $stage = null ) {
+		$current = self::index( $stage ? $stage : $order->get_status() );
+		$dates   = Shilpi_OS_Stage_Changer::get_dates( $order );
+		$steps   = array();
+		$i       = 0;
+		foreach ( self::get_stages() as $key => $stage ) {
+			if ( $i < $current ) {
+				$state = 'done';
+			} elseif ( $i === $current ) {
+				$state = 'current';
+			} else {
+				$state = 'upcoming';
+			}
+			$steps[] = array(
+				'key'   => $key,
+				'label' => $stage['label'],
+				'short' => $stage['short'],
+				'state' => $state,
+				'date'  => ( 'upcoming' !== $state && ! empty( $dates[ $key ] ) ) ? (int) $dates[ $key ] : null,
+			);
+			++$i;
+		}
+		return $steps;
 	}
 
 	/**

@@ -25,7 +25,6 @@ class Shilpi_OS_Settings {
 			'replace_completed' => 'yes',
 			'overdue_enabled'   => 'yes',
 			'overdue_email'     => get_option( 'admin_email' ),
-			'colors'            => array(),
 		);
 	}
 

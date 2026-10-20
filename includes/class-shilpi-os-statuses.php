@@ -31,6 +31,8 @@ class Shilpi_OS_Statuses {
 		add_filter( 'woocommerce_order_list_table_prepare_items_query_args', array( $this, 'hpos_filter_query' ) );
 		add_filter( 'bulk_actions-edit-shop_order', array( $this, 'bulk_actions' ), 20 );
 		add_filter( 'bulk_actions-woocommerce_page_wc-orders', array( $this, 'bulk_actions' ), 20 );
+		add_filter( 'handle_bulk_actions-edit-shop_order', array( $this, 'handle_quiet_bulk' ), 10, 3 );
+		add_filter( 'handle_bulk_actions-woocommerce_page_wc-orders', array( $this, 'handle_quiet_bulk' ), 10, 3 );
 
 		// Auto-move new Processing orders to "Supplier unpaid".
 		add_action( 'woocommerce_order_status_changed', array( $this, 'auto_move' ), 20, 4 );
@@ -265,7 +267,47 @@ class Shilpi_OS_Statuses {
 			/* translators: %s: stage name */
 			$actions[ 'mark_' . $key ] = sprintf( __( 'Change stage to %s', 'shilpi-order-stages' ), $stage['label'] );
 		}
+		foreach ( Shilpi_OS_Stages::get_stages() as $key => $stage ) {
+			/* translators: %s: stage name */
+			$actions[ 'shilpi_os_quiet_' . $key ] = sprintf( __( 'Change stage to %s (no email)', 'shilpi-order-stages' ), $stage['label'] );
+		}
 		return $actions;
+	}
+
+	/**
+	 * Handle "Change stage to X (no email)". Nonces are checked by core before this filter runs.
+	 *
+	 * @param string $redirect Redirect URL.
+	 * @param string $action   Action.
+	 * @param array  $ids      Order IDs.
+	 * @return string
+	 */
+	public function handle_quiet_bulk( $redirect, $action, $ids ) {
+		if ( 0 !== strpos( $action, 'shilpi_os_quiet_' ) || ! current_user_can( 'edit_shop_orders' ) ) {
+			return $redirect;
+		}
+		$stage = substr( $action, strlen( 'shilpi_os_quiet_' ) );
+		if ( ! Shilpi_OS_Stages::is_stage( $stage ) ) {
+			return $redirect;
+		}
+		Shilpi_OS_Stage_Changer::suppress_emails( true );
+		$changed = 0;
+		foreach ( array_map( 'absint', (array) $ids ) as $id ) {
+			$order = wc_get_order( $id );
+			if ( $order && $order->get_status() !== $stage ) {
+				$order->update_status( $stage, __( 'Stage changed by bulk edit (no email).', 'shilpi-order-stages' ), true );
+				++$changed;
+			}
+		}
+		Shilpi_OS_Stage_Changer::suppress_emails( false );
+		return add_query_arg(
+			array(
+				'bulk_action' => 'marked_' . $stage,
+				'changed'     => $changed,
+				'ids'         => implode( ',', array_map( 'absint', (array) $ids ) ),
+			),
+			$redirect
+		);
 	}
 
 	/**

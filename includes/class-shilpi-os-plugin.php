@@ -78,9 +78,11 @@ final class Shilpi_OS_Plugin {
 	}
 
 	/**
-	 * Load translations.
+	 * Load translations bundled in /languages. Needed when the plugin is sold
+	 * outside WordPress.org, where language packs are not delivered automatically.
 	 */
 	public function load_textdomain() {
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Plugin is distributed outside WordPress.org.
 		load_plugin_textdomain( 'shilpi-order-stages', false, dirname( plugin_basename( SHILPI_OS_FILE ) ) . '/languages' );
 	}
 

@@ -3,7 +3,7 @@
  * Plugin Name:          Shilpi Order Stages
  * Plugin URI:           https://mojibur.com
  * Description:          Track every order from supplier payment to delivery with custom WooCommerce order stages, automatic customer emails and a tracking timeline.
- * Version:              1.1.1
+ * Version:              1.1.2
  * Author:               Shilpi
  * Author URI:           https://mojibur.com
  * Text Domain:          shilpi-order-stages
@@ -21,7 +21,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SHILPI_OS_VERSION', '1.1.1' );
+define( 'SHILPI_OS_VERSION', '1.1.2' );
 define( 'SHILPI_OS_FILE', __FILE__ );
 define( 'SHILPI_OS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SHILPI_OS_URL', plugin_dir_url( __FILE__ ) );

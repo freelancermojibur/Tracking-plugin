@@ -10,10 +10,18 @@
 	}
 
 	$( function () {
+		// The ETA checkbox is always shown (no layout shift) and only enabled once the ETA differs from the saved value.
 		var $eta = $( '#shilpi_os_eta' ),
+			$label = $( '.shilpi-os-eta-notify' ),
+			$box = $label.find( 'input[type="checkbox"]' ),
 			etaStart = $eta.val();
 		$eta.on( 'change input', function () {
-			$( '.shilpi-os-eta-notify' ).toggleClass( 'is-visible', $eta.val() !== etaStart );
+			var changed = $eta.val() !== etaStart;
+			$box.prop( 'disabled', ! changed );
+			if ( ! changed ) {
+				$box.prop( 'checked', false );
+			}
+			$label.toggleClass( 'is-disabled', ! changed );
 		} );
 	} );
 

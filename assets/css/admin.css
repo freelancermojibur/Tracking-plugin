@@ -1,7 +1,7 @@
 /* Shilpi Order Stages admin styles. */
 .shilpi-os-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0 16px; }
 .shilpi-os-fields .form-field label { display: block; font-weight: 600; margin-bottom: 4px; }
-.shilpi-os-fields .form-field input,
+.shilpi-os-fields .form-field input:not([type="checkbox"]):not([type="radio"]),
 .shilpi-os-fields .form-field textarea { width: 100%; }
 .shilpi-os-fields .shilpi-os-field-notes { grid-column: 1 / -1; }
 .shilpi-os-profit { font-size: 14px; }
@@ -28,9 +28,9 @@
 .shilpi-os-stepper li.is-done::after { background: #00a32a; }
 .shilpi-os-stepper li.is-current::after { background: #fff; border: 3px solid #2271b1; }
 .shilpi-os-stage-box .button.shilpi-os-next { white-space: normal; height: auto; min-height: 32px; line-height: 1.4; padding: 6px 12px; width: 100%; text-align: center; }
-.shilpi-os-fields .form-field label.shilpi-os-eta-notify { display: block; margin-top: 6px; font-weight: 400; }
-.js .shilpi-os-fields .form-field label.shilpi-os-eta-notify { display: none; }
-.js .shilpi-os-fields .form-field label.shilpi-os-eta-notify.is-visible { display: block; }
+.shilpi-os-fields .form-field label.shilpi-os-eta-notify { display: flex; align-items: center; gap: 6px; margin: 6px 0 0; font-weight: 400; cursor: pointer; }
+.shilpi-os-fields .form-field label.shilpi-os-eta-notify input[type="checkbox"] { width: auto; margin: 0; flex: 0 0 auto; }
+.shilpi-os-fields .form-field label.shilpi-os-eta-notify.is-disabled { color: #a7aaad; cursor: default; }
 .shilpi-os-pipeline { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin: 0 0 24px; }
 .shilpi-os-pipeline a { display: block; background: #fff; border: 1px solid #c3c4c7; border-top: 3px solid #8c8f94; padding: 8px 10px; text-decoration: none; color: #1d2327; font-size: 12px; line-height: 1.3; }
 .shilpi-os-pipeline a:hover { border-color: #2271b1; }

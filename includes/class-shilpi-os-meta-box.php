@@ -17,6 +17,7 @@ class Shilpi_OS_Meta_Box {
 	 */
 	public function __construct() {
 		add_action( 'add_meta_boxes', array( $this, 'add' ), 30 );
+		add_action( 'add_meta_boxes', array( $this, 'place_stage_box' ), 999 );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'save' ), 10, 1 );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'move_next' ), 60, 1 );
 		add_action( 'woocommerce_process_shop_order_meta', array( $this, 'maybe_email_eta' ), 70, 1 );
@@ -87,6 +88,33 @@ class Shilpi_OS_Meta_Box {
 		$screen = Shilpi_OS_Plugin::hpos_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
 		add_meta_box( 'shilpi-os-stage', __( 'Order stage', 'shilpi-order-stages' ), array( $this, 'render_stage' ), $screen, 'side', 'high' );
 		add_meta_box( 'shilpi-os-shipment', __( 'Shipment & Supplier', 'shilpi-order-stages' ), array( $this, 'render' ), $screen, 'normal', 'high' );
+	}
+
+	/**
+	 * Put the "Order stage" box directly under "Order actions", above Order attribution
+	 * and Customer history, which WooCommerce also registers as side / high.
+	 */
+	public function place_stage_box() {
+		global $wp_meta_boxes;
+		$screen = Shilpi_OS_Plugin::hpos_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
+		if ( empty( $wp_meta_boxes[ $screen ]['side']['high']['shilpi-os-stage'] ) ) {
+			return;
+		}
+		$boxes = $wp_meta_boxes[ $screen ]['side']['high'];
+		$ours  = $boxes['shilpi-os-stage'];
+		unset( $boxes['shilpi-os-stage'] );
+
+		$sorted = array();
+		foreach ( $boxes as $id => $box ) {
+			$sorted[ $id ] = $box;
+			if ( 'woocommerce-order-actions' === $id ) {
+				$sorted['shilpi-os-stage'] = $ours;
+			}
+		}
+		if ( ! isset( $sorted['shilpi-os-stage'] ) ) {
+			$sorted = array( 'shilpi-os-stage' => $ours ) + $sorted;
+		}
+		$wp_meta_boxes[ $screen ]['side']['high'] = $sorted; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Reordering meta boxes.
 	}
 
 	/**
@@ -210,7 +238,7 @@ class Shilpi_OS_Meta_Box {
 			}
 			if ( 'eta' === $key && Shilpi_OS_Stages::index( $order->get_status() ) >= 0 && 'completed' !== $order->get_status() ) {
 				printf(
-					'<label class="shilpi-os-eta-notify"><input type="checkbox" name="shilpi_os_eta_notify" value="1" /> %s</label>',
+					'<label class="shilpi-os-eta-notify is-disabled"><input type="checkbox" name="shilpi_os_eta_notify" value="1" disabled="disabled" /> %s</label>',
 					esc_html__( 'Email the customer about the new ETA', 'shilpi-order-stages' )
 				);
 			}

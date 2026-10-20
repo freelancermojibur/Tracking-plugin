@@ -10,6 +10,7 @@
  * @var string   $eta
  * @var string   $tracking
  * @var string   $url
+ * @var string   $track_url Tracking page link with ?order= (empty on the tracking page itself).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -47,4 +48,10 @@ defined( 'ABSPATH' ) || exit;
 			</li>
 		<?php endforeach; ?>
 	</ol>
+	<?php if ( ! empty( $track_url ) ) : ?>
+		<p class="shilpi-os-tracking__link">
+			<?php esc_html_e( 'Track this order any time:', 'shilpi-order-stages' ); ?>
+			<a href="<?php echo esc_url( $track_url ); ?>"><?php echo esc_html( $track_url ); ?></a>
+		</p>
+	<?php endif; ?>
 </section>

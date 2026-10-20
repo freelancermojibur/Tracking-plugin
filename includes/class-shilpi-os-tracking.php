@@ -98,19 +98,21 @@ class Shilpi_OS_Tracking {
 	/**
 	 * Timeline HTML for an order.
 	 *
-	 * @param WC_Order $order Order.
+	 * @param WC_Order $order           Order.
+	 * @param bool     $with_track_link Show the "Track this order any time" link (not on the tracking page itself).
 	 * @return string
 	 */
-	public function render_timeline( $order ) {
+	public function render_timeline( $order, $with_track_link = true ) {
 		wp_enqueue_style( 'shilpi-os-frontend' );
 		return wc_get_template_html(
 			'myaccount/shilpi-os-timeline.php',
 			array(
-				'order'    => $order,
-				'steps'    => Shilpi_OS_Stages::timeline( $order ),
-				'eta'      => Shilpi_OS_Meta_Box::eta_display( $order ),
-				'tracking' => Shilpi_OS_Meta_Box::get( $order, 'tracking_number' ),
-				'url'      => Shilpi_OS_Meta_Box::get( $order, 'tracking_url' ),
+				'track_url' => $with_track_link ? Shilpi_OS_Settings::tracking_page_url( $order ) : '',
+				'order'     => $order,
+				'steps'     => Shilpi_OS_Stages::timeline( $order ),
+				'eta'       => Shilpi_OS_Meta_Box::eta_display( $order ),
+				'tracking'  => Shilpi_OS_Meta_Box::get( $order, 'tracking_number' ),
+				'url'       => Shilpi_OS_Meta_Box::get( $order, 'tracking_url' ),
 			),
 			'',
 			SHILPI_OS_PATH . 'templates/'
@@ -198,48 +200,65 @@ class Shilpi_OS_Tracking {
 	 * @return string
 	 */
 	private function shortcode_html() {
-
 		$error  = '';
 		$result = '';
-		$number = '';
 		$email  = '';
 
-		if ( isset( $_POST['shilpi_os_track_nonce'] ) ) {
-			$number = isset( $_POST['shilpi_os_order'] ) ? sanitize_text_field( wp_unslash( $_POST['shilpi_os_order'] ) ) : '';
-			$email  = isset( $_POST['shilpi_os_email'] ) ? sanitize_email( wp_unslash( $_POST['shilpi_os_email'] ) ) : '';
-			$key    = 'shilpi_os_rl_' . md5( $this->client_ip() );
-			$tries  = (int) get_transient( $key );
+		// Prefill from ?order= (links in emails, thank you page and My Account). Never contains the email.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only prefill.
+		$number    = isset( $_GET['order'] ) ? substr( sanitize_text_field( wp_unslash( $_GET['order'] ) ), 0, 20 ) : '';
+		$prefilled = '' !== $number;
 
-			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['shilpi_os_track_nonce'] ) ), 'shilpi_os_track' ) ) {
-				$error = __( 'Your session has expired. Please refresh the page and try again.', 'shilpi-order-stages' );
-			} elseif ( $tries >= self::RATE_LIMIT ) {
+		/*
+		 * No nonce check on purpose: the page may be served from a full-page cache, where a nonce
+		 * would be stale. Protection is the IP rate limit, the honeypot and the requirement that
+		 * the order number and billing email match. The form reveals nothing else.
+		 */
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( isset( $_POST['shilpi_os_track'] ) ) {
+			$number    = isset( $_POST['shilpi_os_order'] ) ? substr( sanitize_text_field( wp_unslash( $_POST['shilpi_os_order'] ) ), 0, 20 ) : '';
+			$email     = isset( $_POST['shilpi_os_email'] ) ? sanitize_email( wp_unslash( $_POST['shilpi_os_email'] ) ) : '';
+			$honeypot  = isset( $_POST['shilpi_os_website'] ) ? sanitize_text_field( wp_unslash( $_POST['shilpi_os_website'] ) ) : '';
+			$prefilled = false;
+			$key       = 'shilpi_os_rl_' . md5( $this->client_ip() );
+			$tries     = (int) get_transient( $key );
+			$not_found = __( 'Sorry, we could not find an order matching those details. Please check and try again.', 'shilpi-order-stages' );
+
+			if ( $tries >= self::RATE_LIMIT ) {
 				$error = __( 'Too many attempts. Please wait 15 minutes and try again.', 'shilpi-order-stages' );
+			} elseif ( '' !== $honeypot ) {
+				// Bots fill the hidden field. Count the attempt and answer like a normal miss.
+				set_transient( $key, $tries + 1, self::RATE_WINDOW );
+				$error = $not_found;
 			} elseif ( '' === $number || ! is_email( $email ) ) {
 				$error = __( 'Please enter your order number and the email address used at checkout.', 'shilpi-order-stages' );
 			} else {
 				set_transient( $key, $tries + 1, self::RATE_WINDOW );
-				$order = $this->find_order( $number );
-				if ( $order && hash_equals( strtolower( $order->get_billing_email() ), strtolower( $email ) ) && $this->has_timeline( $order ) ) {
-					$result = $this->render_timeline( $order );
-				} elseif ( $order && hash_equals( strtolower( $order->get_billing_email() ), strtolower( $email ) ) ) {
+				$order   = $this->find_order( $number );
+				$matches = $order && hash_equals( strtolower( $order->get_billing_email() ), strtolower( $email ) );
+				if ( $matches && $this->has_timeline( $order ) ) {
+					$result = $this->render_timeline( $order, false );
+				} elseif ( $matches ) {
 					$result = '<p class="shilpi-os-status">' . esc_html(
 						/* translators: %s: order status */
 						sprintf( __( 'Order status: %s', 'shilpi-order-stages' ), wc_get_order_status_name( $order->get_status() ) )
 					) . '</p>';
 				} else {
 					// Same message whether the order does not exist or the email is wrong.
-					$error = __( 'Sorry, we could not find an order matching those details. Please check and try again.', 'shilpi-order-stages' );
+					$error = $not_found;
 				}
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return wc_get_template_html(
 			'myaccount/shilpi-os-track-form.php',
 			array(
-				'error'  => $error,
-				'result' => $result,
-				'number' => $number,
-				'email'  => $email,
+				'error'     => $error,
+				'result'    => $result,
+				'number'    => $number,
+				'email'     => $email,
+				'prefilled' => $prefilled,
 			),
 			'',
 			SHILPI_OS_PATH . 'templates/'

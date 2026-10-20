@@ -50,6 +50,7 @@ abstract class Shilpi_OS_Email_Stage extends WC_Email {
 				'{tracking_url}'        => '',
 				'{shipping_address}'    => '',
 				'{review_url}'          => '',
+				'{tracking_page_url}'   => '',
 			),
 			$this->placeholders
 		);
@@ -167,6 +168,7 @@ abstract class Shilpi_OS_Email_Stage extends WC_Email {
 		$this->placeholders['{tracking_url}']        = Shilpi_OS_Meta_Box::get( $order, 'tracking_url' );
 		$this->placeholders['{shipping_address}']    = wp_strip_all_tags( preg_replace( '#<br\s*/?>#i', ', ', (string) $address ) );
 		$this->placeholders['{review_url}']          = Shilpi_OS_Settings::review_url();
+		$this->placeholders['{tracking_page_url}']   = Shilpi_OS_Settings::tracking_page_url( $order );
 
 		$sent = false;
 		if ( $this->is_enabled() && $this->get_recipient() ) {

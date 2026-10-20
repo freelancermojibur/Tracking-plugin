@@ -30,6 +30,7 @@ class Shilpi_OS_Settings {
 		add_action( 'woocommerce_settings_' . self::TAB, array( $this, 'output' ) );
 		add_action( 'woocommerce_settings_save_' . self::TAB, array( $this, 'save' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( SHILPI_OS_FILE ), array( $this, 'action_links' ) );
+		add_action( 'save_post_page', array( __CLASS__, 'reset_tracking_page_scan' ) );
 	}
 
 	/**
@@ -45,6 +46,7 @@ class Shilpi_OS_Settings {
 			'overdue_enabled'    => 'yes',
 			'overdue_email'      => get_option( 'admin_email' ),
 			'review_url'         => '',
+			'tracking_page'      => '',
 			'email_accent'       => '',
 		);
 	}
@@ -81,6 +83,83 @@ class Shilpi_OS_Settings {
 	 */
 	public static function review_url() {
 		return esc_url_raw( trim( (string) self::get( 'review_url' ) ) );
+	}
+
+	/**
+	 * Tracking page ID: the saved page, else the first published page with the tracking shortcode
+	 * (the detected ID is then stored). Returns 0 when there is none.
+	 *
+	 * @return int
+	 */
+	public static function tracking_page_id() {
+		$id = absint( self::get( 'tracking_page' ) );
+		if ( $id && 'publish' === get_post_status( $id ) ) {
+			return $id;
+		}
+		$id = self::detect_tracking_page();
+		if ( $id ) {
+			$saved                  = get_option( self::OPTION, array() );
+			$saved                  = is_array( $saved ) ? $saved : array();
+			$saved['tracking_page'] = $id;
+			update_option( self::OPTION, $saved );
+		}
+		return $id;
+	}
+
+	/**
+	 * Find the first published page containing [shilpi_track_order] or [sk_track_order].
+	 *
+	 * @return int
+	 */
+	private static function detect_tracking_page() {
+		$found = get_transient( 'shilpi_os_tracking_page_scan' );
+		if ( false !== $found ) {
+			return absint( $found );
+		}
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One small lookup, cached in a transient.
+		$ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->posts} WHERE post_type = 'page' AND post_status = 'publish' AND ( post_content LIKE %s OR post_content LIKE %s ) ORDER BY ID ASC LIMIT 20",
+				'%' . $wpdb->esc_like( '[shilpi_track_order' ) . '%',
+				'%' . $wpdb->esc_like( '[sk_track_order' ) . '%'
+			)
+		);
+		$id  = 0;
+		foreach ( (array) $ids as $candidate ) {
+			$content = (string) get_post_field( 'post_content', $candidate );
+			if ( has_shortcode( $content, 'shilpi_track_order' ) || has_shortcode( $content, 'sk_track_order' ) ) {
+				$id = (int) $candidate;
+				break;
+			}
+		}
+		set_transient( 'shilpi_os_tracking_page_scan', $id, HOUR_IN_SECONDS );
+		return $id;
+	}
+
+	/**
+	 * Forget the cached tracking page scan when a page is saved.
+	 */
+	public static function reset_tracking_page_scan() {
+		delete_transient( 'shilpi_os_tracking_page_scan' );
+	}
+
+	/**
+	 * Tracking page URL for an order (order number only, never the email), or empty string.
+	 *
+	 * @param WC_Order|null $order Order.
+	 * @return string
+	 */
+	public static function tracking_page_url( $order = null ) {
+		$id  = self::tracking_page_id();
+		$url = $id ? get_permalink( $id ) : '';
+		if ( ! $url ) {
+			return '';
+		}
+		if ( $order instanceof WC_Order ) {
+			$url = add_query_arg( 'order', rawurlencode( (string) $order->get_order_number() ), $url );
+		}
+		return $url;
 	}
 
 	/**
@@ -185,6 +264,16 @@ class Shilpi_OS_Settings {
 				'title' => __( 'Emails', 'shilpi-order-stages' ),
 				'type'  => 'title',
 				'id'    => 'shilpi_os_emails',
+			),
+			array(
+				'title'    => __( 'Tracking page', 'shilpi-order-stages' ),
+				'desc'     => __( 'Page with the [shilpi_track_order] shortcode. Emails link to it with a "Track your order" button. If empty, the first published page with the shortcode is used.', 'shilpi-order-stages' ),
+				'id'       => $this->id( 'tracking_page' ),
+				'type'     => 'single_select_page',
+				'default'  => '',
+				'class'    => 'wc-enhanced-select-nostd',
+				'css'      => 'min-width:300px;',
+				'desc_tip' => false,
 			),
 			array(
 				'title'       => __( 'Review URL', 'shilpi-order-stages' ),

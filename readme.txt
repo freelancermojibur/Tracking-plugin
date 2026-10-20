@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 8.0
 WC tested up to: 11.2
-Stable tag: 1.1.4
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ The store owner only changes the stage. Everything else happens automatically: t
 * No email on backward moves, no duplicate emails for the same stage.
 * Optional replacement of the core Completed email with the Delivered stage email.
 * Customer timeline on My Account > View order and on the order received page.
-* Tracking page shortcode with nonce protection and rate limiting.
+* Tracking page shortcode with rate limiting and a honeypot, safe to use with full-page caching. Links in emails prefill the order number.
 * Dashboard (WooCommerce > Order Stages) with active, to pay, in transit and overdue counts plus an ETA table.
 * Daily overdue alert email.
 * Rename stages (admin and customer names) and change badge colours in settings.
@@ -66,12 +66,12 @@ Yes. Copy files from the plugin's `templates/` folder into your theme:
 
 * `templates/emails/shilpi-os-stage.php` to `yourtheme/woocommerce/emails/shilpi-os-stage.php`
 * `templates/emails/plain/shilpi-os-stage.php` to `yourtheme/woocommerce/emails/plain/shilpi-os-stage.php`
-* `templates/emails/parts/shilpi-os-progress.php`, `shilpi-os-shipment.php` and `shilpi-os-review-button.php` to `yourtheme/woocommerce/emails/parts/`
+* `templates/emails/parts/shilpi-os-progress.php`, `shilpi-os-shipment.php`, `shilpi-os-track-button.php` and `shilpi-os-review-button.php` to `yourtheme/woocommerce/emails/parts/`
 * `templates/myaccount/shilpi-os-timeline.php` and `shilpi-os-track-form.php` to `yourtheme/woocommerce/myaccount/`
 
 = Which placeholders can I use in emails? =
 
-`{customer_first_name}`, `{order_number}`, `{order_date}`, `{product_names}`, `{eta}`, `{tracking_number}`, `{tracking_url}`, `{shipping_address}`, `{review_url}` and `{site_title}`. The Delivery estimate updated email also supports `{old_eta}` and `{new_eta}`.
+`{customer_first_name}`, `{order_number}`, `{order_date}`, `{product_names}`, `{eta}`, `{tracking_number}`, `{tracking_url}`, `{shipping_address}`, `{review_url}`, `{tracking_page_url}` and `{site_title}`. The Delivery estimate updated email also supports `{old_eta}` and `{new_eta}`.
 
 = When is the customer emailed? =
 
@@ -86,6 +86,13 @@ No. Uninstalling removes only the plugin settings. Order stage dates, shipment d
 Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` and must be 17 characters or less. Other hooks: `shilpi_os_stage_changed`, `shilpi_os_send_stage_email`, `shilpi_os_find_order_by_number` and `shilpi_os_settings_fields`.
 
 == Changelog ==
+
+= 1.2.0 =
+* New: "Tracking page" setting. Defaults to the first published page with the tracking shortcode.
+* New: "Track your order" button under the progress bar in every stage email and the Delivery estimate updated email, linking to the tracking page with the order number (never the email address). Plain text emails print the link. New {tracking_page_url} placeholder.
+* New: the tracking form prefills the order number from ?order= in the link and focuses the email field.
+* New: "Track this order any time" link under the timeline on the thank you page and in My Account.
+* Improved: the tracking form works on pages served from a full-page cache. It no longer depends on a nonce; it is protected by the IP rate limit (5 tries per 15 minutes), the order number plus billing email match and a honeypot field.
 
 = 1.1.4 =
 * Improved: the plain text email no longer has a "Current stage" line. Like the HTML email it shows "Step X of 9" with the next step (or "Delivered"), then Estimated delivery and Tracking.

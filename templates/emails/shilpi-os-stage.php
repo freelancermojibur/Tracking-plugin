@@ -42,6 +42,16 @@ wc_get_template(
 	SHILPI_OS_PATH . 'templates/'
 );
 
+$shilpi_os_track_url = Shilpi_OS_Settings::tracking_page_url( $order );
+if ( $shilpi_os_track_url ) {
+	wc_get_template(
+		'emails/parts/shilpi-os-track-button.php',
+		array( 'url' => $shilpi_os_track_url ),
+		'',
+		SHILPI_OS_PATH . 'templates/'
+	);
+}
+
 wc_get_template(
 	'emails/parts/shilpi-os-shipment.php',
 	array(

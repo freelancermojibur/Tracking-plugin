@@ -70,6 +70,11 @@ if ( count( $shilpi_os_steps ) - 1 === $shilpi_os_pos ) {
 	}
 	echo "\n";
 }
+
+$shilpi_os_track_url = Shilpi_OS_Settings::tracking_page_url( $order );
+if ( $shilpi_os_track_url ) {
+	echo $shilpi_os_txt( __( 'Track your order:', 'shilpi-order-stages' ) ) . ' ' . esc_url_raw( $shilpi_os_track_url ) . "\n\n";
+}
 if ( 'completed' !== $stage ) {
 	$shilpi_os_eta = Shilpi_OS_Meta_Box::eta_display( $order );
 	echo $shilpi_os_txt( __( 'Estimated delivery:', 'shilpi-order-stages' ) . ' ' . ( $shilpi_os_eta ? $shilpi_os_eta : __( 'To be confirmed', 'shilpi-order-stages' ) ) ) . "\n";

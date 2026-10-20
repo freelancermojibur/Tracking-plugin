@@ -21,6 +21,23 @@ class Shilpi_OS_Dashboard {
 		add_action( 'admin_menu', array( $this, 'menu' ), 60 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'admin_post_shilpi_os_send_alert', array( $this, 'send_alert_now' ) );
+		add_action( 'admin_post_shilpi_os_move_processing', array( $this, 'move_processing' ) );
+	}
+
+	/**
+	 * IDs of orders still in Processing (not yet started in the stage workflow).
+	 *
+	 * @return int[]
+	 */
+	public static function processing_order_ids() {
+		return wc_get_orders(
+			array(
+				'type'   => 'shop_order',
+				'status' => array( 'processing' ),
+				'limit'  => -1,
+				'return' => 'ids',
+			)
+		);
 	}
 
 	/**
@@ -160,6 +177,7 @@ class Shilpi_OS_Dashboard {
 		$to_pay     = 0;
 		$in_transit = 0;
 		$upcoming   = array();
+		$processing = self::processing_order_ids();
 
 		foreach ( $orders as $order ) {
 			$status = $order->get_status();
@@ -177,6 +195,7 @@ class Shilpi_OS_Dashboard {
 		$upcoming = self::sort_by_eta( $upcoming );
 
 		$cards = array(
+			array( __( 'Waiting to start (Processing)', 'shilpi-order-stages' ), count( $processing ), 'is-neutral', $this->list_url( 'processing' ) ),
 			array( __( 'Active orders', 'shilpi-order-stages' ), count( $orders ), 'is-info', $this->list_url() ),
 			array( __( 'To pay supplier', 'shilpi-order-stages' ), $to_pay, 'is-warning', $this->list_url( $keys[0] ) ),
 			array( __( 'In transit / at port', 'shilpi-order-stages' ), $in_transit, 'is-ok', '#shilpi-os-upcoming' ),
@@ -194,6 +213,44 @@ class Shilpi_OS_Dashboard {
 				$sent = absint( $_GET['shilpi_os_alert'] );
 				echo '<div class="notice notice-' . ( $sent ? 'success' : 'info' ) . ' is-dismissible"><p>' . esc_html( $sent ? __( 'Overdue alert email sent.', 'shilpi-order-stages' ) : __( 'No alert sent: there are no overdue orders, or alerts are turned off.', 'shilpi-order-stages' ) ) . '</p></div>';
 			}
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
+			if ( isset( $_GET['shilpi_os_moved'] ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
+				$moved = absint( $_GET['shilpi_os_moved'] );
+				/* translators: %d: number of orders */
+				echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( sprintf( _n( '%d order moved to the first stage.', '%d orders moved to the first stage.', $moved, 'shilpi-order-stages' ), $moved ) ) . '</p></div>';
+			}
+			if ( $processing ) :
+				?>
+				<div class="notice notice-warning is-dismissible shilpi-os-processing-notice">
+					<p>
+						<?php
+						echo esc_html(
+							sprintf(
+								/* translators: 1: number of orders, 2: first stage name */
+								_n( '%1$d order is still in Processing and has not started the stage workflow. Move it to "%2$s"?', '%1$d orders are still in Processing and have not started the stage workflow. Move them to "%2$s"?', count( $processing ), 'shilpi-order-stages' ),
+								count( $processing ),
+								Shilpi_OS_Stages::label( $keys[0] )
+							)
+						);
+						?>
+					</p>
+					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+						<input type="hidden" name="action" value="shilpi_os_move_processing" />
+						<?php wp_nonce_field( 'shilpi_os_move_processing' ); ?>
+						<p>
+							<button type="submit" class="button button-primary" name="shilpi_os_mode" value="quiet">
+								<?php
+								/* translators: %s: first stage name */
+								echo esc_html( sprintf( __( 'Move them to %s without email', 'shilpi-order-stages' ), Shilpi_OS_Stages::label( $keys[0] ) ) );
+								?>
+							</button>
+							<button type="submit" class="button" name="shilpi_os_mode" value="email"><?php esc_html_e( 'Move and email customers', 'shilpi-order-stages' ); ?></button>
+						</p>
+					</form>
+				</div>
+				<?php
+			endif;
 			?>
 			<div class="shilpi-os-cards">
 				<?php foreach ( $cards as $card ) : ?>
@@ -286,6 +343,41 @@ class Shilpi_OS_Dashboard {
 		check_admin_referer( 'shilpi_os_send_alert' );
 		$sent = Shilpi_OS_Cron::send_overdue_alert();
 		wp_safe_redirect( add_query_arg( 'shilpi_os_alert', $sent ? 1 : 0, admin_url( 'admin.php?page=shilpi-os-dashboard' ) ) );
+		exit;
+	}
+
+	/**
+	 * Move all Processing orders to the first stage (dashboard notice buttons).
+	 */
+	public function move_processing() {
+		if ( ! current_user_can( 'edit_shop_orders' ) ) {
+			wp_die( esc_html__( 'You do not have permission to do this.', 'shilpi-order-stages' ) );
+		}
+		check_admin_referer( 'shilpi_os_move_processing' );
+
+		$email = isset( $_POST['shilpi_os_mode'] ) && 'email' === sanitize_key( wp_unslash( $_POST['shilpi_os_mode'] ) );
+		$keys  = array_keys( Shilpi_OS_Stages::get_stages() );
+		$moved = 0;
+
+		Shilpi_OS_Stage_Changer::suppress_emails( ! $email );
+		foreach ( self::processing_order_ids() as $order_id ) {
+			$order = wc_get_order( $order_id );
+			if ( ! $order || 'processing' !== $order->get_status() ) {
+				continue;
+			}
+			$order->update_meta_data( '_shilpi_os_auto_moved', time() );
+			$order->update_status(
+				$keys[0],
+				$email
+					? __( 'Moved from Processing to the first stage from the Order Stages dashboard (customer emailed).', 'shilpi-order-stages' )
+					: __( 'Moved from Processing to the first stage from the Order Stages dashboard (no email).', 'shilpi-order-stages' ),
+				true
+			);
+			++$moved;
+		}
+		Shilpi_OS_Stage_Changer::suppress_emails( false );
+
+		wp_safe_redirect( add_query_arg( 'shilpi_os_moved', $moved, admin_url( 'admin.php?page=shilpi-os-dashboard' ) ) );
 		exit;
 	}
 }

@@ -5,8 +5,8 @@ Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 8.0
-WC tested up to: 10.3
-Stable tag: 1.0.0
+WC tested up to: 11.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,16 @@ The store owner only changes the stage. Everything else happens automatically: t
 4. Go to WooCommerce > Settings > Emails to review the nine "Order stage" emails.
 5. Create a page with the `[shilpi_track_order]` shortcode for guest order tracking.
 
+= Install / update =
+
+Always install from the release zip `shilpi-order-stages.zip` (built with `bash bin/build.sh`, output in `dist/`). Its root folder is `shilpi-order-stages/`.
+
+Do not install the GitHub "Download ZIP" of a branch. It creates a folder named after the repository and branch, which breaks translations and creates a second copy of the plugin.
+
+To update: go to Plugins > Add New > Upload Plugin, choose the new `shilpi-order-stages.zip` and confirm "Replace current with uploaded". Settings and order data are kept.
+
+If an earlier copy is installed in a different folder (for example `Tracking-plugin-...`), deactivate and delete that copy first, then upload the zip. Deleting the plugin keeps order data; only plugin settings are removed, so note any custom settings before deleting.
+
 == Frequently Asked Questions ==
 
 = Which shortcode shows the tracking form? =
@@ -76,6 +86,13 @@ No. Uninstalling removes only the plugin settings. Order stage dates, shipment d
 Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` and must be 17 characters or less. Other hooks: `shilpi_os_stage_changed`, `shilpi_os_send_stage_email`, `shilpi_os_find_order_by_number` and `shilpi_os_settings_fields`.
 
 == Changelog ==
+
+= 1.1.0 =
+* New: setting to replace the WooCommerce Processing order email with the stage 1 email (on by default), so new customers get one email instead of two.
+* Improved: new orders are moved to the first stage in a background Action Scheduler task after payment completes, avoiding conflicts with payment gateways.
+* New: dashboard card for orders still in Processing, with buttons to move them to the first stage with or without email.
+* New: build script `bin/build.sh` that creates `dist/shilpi-order-stages.zip`.
+* Tested with WooCommerce 11.2.
 
 = 1.0.0 =
 * First release.

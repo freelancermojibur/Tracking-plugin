@@ -17,3 +17,4 @@
 .shilpi-os-card.is-ok { border-left-color: #00a32a; }
 .shilpi-os-overdue { color: #d63638; font-weight: 600; }
 .woocommerce_page_shilpi-os-dashboard mark.order-status { display: inline-flex; line-height: 2.5em; border-radius: 4px; padding: 0 1em; background: #e5e5e5; color: #454545; white-space: nowrap; }
+.shilpi-os-card.is-neutral { border-left-color: #8c8f94; }

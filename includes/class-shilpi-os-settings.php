@@ -39,10 +39,11 @@ class Shilpi_OS_Settings {
 	 */
 	public static function defaults() {
 		return array(
-			'auto_move'         => 'yes',
-			'replace_completed' => 'yes',
-			'overdue_enabled'   => 'yes',
-			'overdue_email'     => get_option( 'admin_email' ),
+			'auto_move'          => 'yes',
+			'replace_completed'  => 'yes',
+			'replace_processing' => 'yes',
+			'overdue_enabled'    => 'yes',
+			'overdue_email'      => get_option( 'admin_email' ),
 		);
 	}
 
@@ -136,6 +137,14 @@ class Shilpi_OS_Settings {
 				'id'      => $this->id( 'auto_move' ),
 				'type'    => 'checkbox',
 				'default' => $defaults['auto_move'],
+			),
+			array(
+				'title'    => __( 'Processing email', 'shilpi-order-stages' ),
+				'desc'     => __( 'Replace the WooCommerce Processing order email with the stage 1 email', 'shilpi-order-stages' ),
+				'desc_tip' => __( 'Only applies when new orders are moved automatically. The admin New order email is not affected.', 'shilpi-order-stages' ),
+				'id'       => $this->id( 'replace_processing' ),
+				'type'     => 'checkbox',
+				'default'  => $defaults['replace_processing'],
 			),
 			array(
 				'title'   => __( 'Completed email', 'shilpi-order-stages' ),

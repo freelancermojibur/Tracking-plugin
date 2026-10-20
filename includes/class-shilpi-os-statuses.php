@@ -12,6 +12,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Shilpi_OS_Statuses {
 
+	const AUTO_MOVE_HOOK = 'shilpi_os_auto_move';
+
 	/**
 	 * Constructor.
 	 */
@@ -36,6 +38,7 @@ class Shilpi_OS_Statuses {
 
 		// Auto-move new Processing orders to "Supplier unpaid".
 		add_action( 'woocommerce_order_status_changed', array( $this, 'auto_move' ), 20, 4 );
+		add_action( self::AUTO_MOVE_HOOK, array( $this, 'run_auto_move' ) );
 	}
 
 	/**
@@ -313,7 +316,10 @@ class Shilpi_OS_Statuses {
 	}
 
 	/**
-	 * Move a newly Processing order to "Supplier unpaid" (once per order).
+	 * Queue the auto-move when an order becomes Processing.
+	 *
+	 * The move runs in an Action Scheduler async action, after the payment request has
+	 * finished, so gateways that save the order again cannot overwrite the new status.
 	 *
 	 * @param int      $order_id Order ID.
 	 * @param string   $from     Old status.
@@ -327,7 +333,41 @@ class Shilpi_OS_Statuses {
 		if ( ! $order instanceof WC_Order ) {
 			$order = wc_get_order( $order_id );
 		}
-		if ( ! $order || 'shop_order' !== $order->get_type() || $order->get_meta( '_shilpi_os_auto_moved' ) ) {
+		if ( ! self::should_auto_move( $order ) ) {
+			return;
+		}
+		if ( function_exists( 'as_enqueue_async_action' ) ) {
+			as_enqueue_async_action( self::AUTO_MOVE_HOOK, array( 'order_id' => (int) $order_id ), 'shilpi-order-stages', true );
+		} else {
+			$this->run_auto_move( $order_id );
+		}
+	}
+
+	/**
+	 * Whether an order is a new Processing order that has not been auto-moved yet.
+	 *
+	 * @param WC_Order|false $order Order.
+	 * @return bool
+	 */
+	public static function should_auto_move( $order ) {
+		return $order instanceof WC_Order
+			&& 'shop_order' === $order->get_type()
+			&& 'processing' === $order->get_status()
+			&& ! $order->get_meta( '_shilpi_os_auto_moved' );
+	}
+
+	/**
+	 * Async action: move the order to the first stage if it is still waiting.
+	 *
+	 * @param int $order_id Order ID.
+	 */
+	public function run_auto_move( $order_id ) {
+		if ( ! Shilpi_OS_Settings::enabled( 'auto_move' ) ) {
+			return;
+		}
+		// Fresh copy from the database, never a cached object from the payment request.
+		$order = wc_get_order( absint( $order_id ) );
+		if ( ! self::should_auto_move( $order ) ) {
 			return;
 		}
 		$keys = array_keys( Shilpi_OS_Stages::get_stages() );

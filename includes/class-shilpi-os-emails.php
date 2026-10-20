@@ -19,6 +19,7 @@ class Shilpi_OS_Emails {
 		add_filter( 'woocommerce_email_classes', array( $this, 'register' ) );
 		add_filter( 'shilpi_os_send_stage_email', array( $this, 'send' ), 10, 3 );
 		add_filter( 'woocommerce_email_enabled_customer_completed_order', array( $this, 'maybe_disable_core_completed' ), 20 );
+		add_filter( 'woocommerce_email_enabled_customer_processing_order', array( $this, 'maybe_disable_core_processing' ), 20, 2 );
 	}
 
 	/**
@@ -102,6 +103,27 @@ class Shilpi_OS_Emails {
 			return $enabled;
 		}
 		$ours = self::get_email( 'completed' );
+		return ( $ours && $ours->is_enabled() ) ? false : $enabled;
+	}
+
+	/**
+	 * Turn off the core Processing order email for orders that will be auto-moved,
+	 * because the stage 1 email is sent to the customer instead.
+	 *
+	 * @param bool          $enabled Enabled.
+	 * @param WC_Order|null $order   Order.
+	 * @return bool
+	 */
+	public function maybe_disable_core_processing( $enabled, $order = null ) {
+		if ( ! $enabled || ! Shilpi_OS_Settings::enabled( 'replace_processing' ) || ! Shilpi_OS_Settings::enabled( 'auto_move' ) ) {
+			return $enabled;
+		}
+		// Only orders that are about to be auto-moved (not orders moved back to Processing later).
+		if ( ! $order instanceof WC_Order || 'shop_order' !== $order->get_type() || $order->get_meta( '_shilpi_os_auto_moved' ) ) {
+			return $enabled;
+		}
+		$keys = array_keys( Shilpi_OS_Stages::get_stages() );
+		$ours = self::get_email( $keys[0] );
 		return ( $ours && $ours->is_enabled() ) ? false : $enabled;
 	}
 }

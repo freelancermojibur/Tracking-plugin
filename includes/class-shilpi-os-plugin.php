@@ -39,6 +39,20 @@ final class Shilpi_OS_Plugin {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
 		new Shilpi_OS_Statuses();
+		new Shilpi_OS_Stage_Changer();
+		if ( is_admin() ) {
+			new Shilpi_OS_Meta_Box();
+		}
+	}
+
+	/**
+	 * Whether HPOS (custom order tables) is the active order storage.
+	 *
+	 * @return bool
+	 */
+	public static function hpos_enabled() {
+		return class_exists( \Automattic\WooCommerce\Utilities\OrderUtil::class )
+			&& \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
 	}
 
 	/**

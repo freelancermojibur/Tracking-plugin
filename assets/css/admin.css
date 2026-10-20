@@ -1,0 +1,18 @@
+/* Shilpi Order Stages admin styles. */
+.shilpi-os-stage-bar { background: #f6f7f7; border: 1px solid #dcdcde; padding: 4px 12px; margin-bottom: 12px; }
+.shilpi-os-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0 16px; }
+.shilpi-os-fields .form-field label { display: block; font-weight: 600; margin-bottom: 4px; }
+.shilpi-os-fields .form-field input,
+.shilpi-os-fields .form-field textarea { width: 100%; }
+.shilpi-os-fields .shilpi-os-field-notes { grid-column: 1 / -1; }
+.shilpi-os-profit { font-size: 14px; }
+.shilpi-os-history { margin: 0 0 0 18px; list-style: disc; }
+.shilpi-os-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+.shilpi-os-card { background: #fff; border: 1px solid #c3c4c7; border-left-width: 4px; padding: 16px; text-decoration: none; color: #1d2327; display: block; }
+.shilpi-os-card:hover { border-color: #2271b1; }
+.shilpi-os-card .shilpi-os-num { display: block; font-size: 32px; font-weight: 600; line-height: 1.2; }
+.shilpi-os-card.is-warning { border-left-color: #dba617; }
+.shilpi-os-card.is-danger { border-left-color: #d63638; }
+.shilpi-os-card.is-info { border-left-color: #2271b1; }
+.shilpi-os-card.is-ok { border-left-color: #00a32a; }
+.shilpi-os-overdue { color: #d63638; font-weight: 600; }

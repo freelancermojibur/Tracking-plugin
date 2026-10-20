@@ -32,11 +32,11 @@ foreach ( Shilpi_OS_Stages::timeline( $order, $stage ) as $shilpi_os_i => $shilp
 	} else {
 		$shilpi_os_mark = '[ ]';
 	}
-	echo esc_html( $shilpi_os_mark . ' ' . ( $shilpi_os_i + 1 ) . '. ' . $shilpi_os_step['label'] ) . "\n";
+	echo esc_html( $shilpi_os_mark . ' ' . ( $shilpi_os_i + 1 ) . '. ' . $shilpi_os_step['short'] ) . "\n";
 }
 echo "\n";
 
-echo esc_html__( 'Current stage:', 'shilpi-order-stages' ) . ' ' . esc_html( Shilpi_OS_Stages::label( $stage ) ) . "\n";
+echo esc_html__( 'Current stage:', 'shilpi-order-stages' ) . ' ' . esc_html( Shilpi_OS_Stages::customer_label( $stage ) ) . "\n";
 if ( 'completed' !== $stage ) {
 	$shilpi_os_eta = Shilpi_OS_Meta_Box::eta_display( $order );
 	echo esc_html__( 'Estimated delivery:', 'shilpi-order-stages' ) . ' ' . esc_html( $shilpi_os_eta ? $shilpi_os_eta : __( 'To be confirmed', 'shilpi-order-stages' ) ) . "\n";

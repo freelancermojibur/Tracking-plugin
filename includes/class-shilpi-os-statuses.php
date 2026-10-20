@@ -77,9 +77,11 @@ class Shilpi_OS_Statuses {
 	 * @return array
 	 */
 	public function add_to_order_statuses( $statuses ) {
+		// Customers see the friendly name (for example "Order confirmed" instead of "Supplier unpaid").
+		$field  = ( is_admin() && ! wp_doing_ajax() ) ? 'label' : 'short';
 		$custom = array();
 		foreach ( Shilpi_OS_Stages::get_custom_stages() as $key => $stage ) {
-			$custom[ 'wc-' . $key ] = $stage['label'];
+			$custom[ 'wc-' . $key ] = $stage[ $field ];
 		}
 		$out = array();
 		foreach ( $statuses as $key => $label ) {

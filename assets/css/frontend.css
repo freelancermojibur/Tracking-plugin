@@ -1,0 +1,22 @@
+/* Shilpi Order Stages: customer timeline. */
+.shilpi-os-tracking { margin: 0 0 2em; }
+.shilpi-os-tracking__meta { margin: 0 0 .5em; }
+.shilpi-os-timeline { list-style: none; margin: 1em 0 0; padding: 0; }
+.shilpi-os-timeline__step { position: relative; padding: 0 0 1.2em 2.2em; margin: 0; }
+.shilpi-os-timeline__step::before { content: ""; position: absolute; left: .55em; top: 1.2em; bottom: -.1em; width: 2px; background: #dcdcde; }
+.shilpi-os-timeline__step:last-child::before { display: none; }
+.shilpi-os-timeline__step.is-done::before { background: #00a32a; }
+.shilpi-os-timeline__dot { position: absolute; left: 0; top: .15em; width: 1.2em; height: 1.2em; border-radius: 50%; background: #dcdcde; box-sizing: border-box; }
+.shilpi-os-timeline__step.is-done .shilpi-os-timeline__dot { background: #00a32a; }
+.shilpi-os-timeline__step.is-current .shilpi-os-timeline__dot { background: #fff; border: .35em solid #2271b1; }
+.shilpi-os-timeline__label { display: block; }
+.shilpi-os-timeline__step.is-current .shilpi-os-timeline__label { font-weight: 700; }
+.shilpi-os-timeline__step.is-upcoming .shilpi-os-timeline__label { opacity: .6; }
+.shilpi-os-timeline__date { display: block; font-size: .85em; opacity: .75; }
+.shilpi-os-track__form { margin-bottom: 1.5em; }
+@media (min-width: 768px) {
+	.shilpi-os-timeline { display: flex; }
+	.shilpi-os-timeline__step { flex: 1 1 0; padding: 2em .25em 0; text-align: center; font-size: .9em; }
+	.shilpi-os-timeline__step::before { left: 50%; right: -50%; top: .55em; bottom: auto; width: auto; height: 2px; }
+	.shilpi-os-timeline__dot { left: 50%; margin-left: -.6em; top: 0; }
+}

@@ -15,7 +15,7 @@ class Shilpi_OS_Stages {
 	/**
 	 * Get all stages in order, keyed by order status (without the "wc-" prefix).
 	 *
-	 * Each stage: label, short (progress bar label), color (badge background).
+	 * Each stage: label (admin), short (customer facing name), color (badge background).
 	 *
 	 * @return array
 	 */
@@ -79,7 +79,11 @@ class Shilpi_OS_Stages {
 		// Labels and colours customised in the settings page.
 		foreach ( $stages as $key => $stage ) {
 			$label = Shilpi_OS_Settings::get( 'label_' . $key );
+			$short = Shilpi_OS_Settings::get( 'short_' . $key );
 			$color = Shilpi_OS_Settings::get( 'color_' . $key );
+			if ( is_string( $short ) && '' !== trim( $short ) ) {
+				$stages[ $key ]['short'] = $short;
+			}
 			if ( is_string( $label ) && '' !== trim( $label ) ) {
 				$stages[ $key ]['label'] = $label;
 			}
@@ -181,6 +185,18 @@ class Shilpi_OS_Stages {
 			++$i;
 		}
 		return $steps;
+	}
+
+	/**
+	 * Customer facing name for a stage.
+	 *
+	 * @param string $status Status.
+	 * @return string
+	 */
+	public static function customer_label( $status ) {
+		$stages = self::get_stages();
+		$key    = self::strip( $status );
+		return isset( $stages[ $key ] ) ? $stages[ $key ]['short'] : wc_get_order_status_name( $key );
 	}
 
 	/**

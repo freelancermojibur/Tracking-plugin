@@ -41,6 +41,7 @@ final class Shilpi_OS_Plugin {
 		new Shilpi_OS_Statuses();
 		new Shilpi_OS_Stage_Changer();
 		new Shilpi_OS_Emails();
+		new Shilpi_OS_Tracking();
 		if ( is_admin() ) {
 			new Shilpi_OS_Meta_Box();
 		}

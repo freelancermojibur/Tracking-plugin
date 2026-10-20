@@ -23,6 +23,15 @@ do_action( 'woocommerce_email_header', $email_heading, $email );
 
 echo wp_kses_post( wpautop( wptexturize( $message ) ) );
 
+if ( 'completed' === $stage && Shilpi_OS_Settings::review_url() ) {
+	wc_get_template(
+		'emails/parts/shilpi-os-review-button.php',
+		array( 'url' => Shilpi_OS_Settings::review_url() ),
+		'',
+		SHILPI_OS_PATH . 'templates/'
+	);
+}
+
 wc_get_template(
 	'emails/parts/shilpi-os-progress.php',
 	array(

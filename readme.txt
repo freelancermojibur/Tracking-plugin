@@ -66,12 +66,12 @@ Yes. Copy files from the plugin's `templates/` folder into your theme:
 
 * `templates/emails/shilpi-os-stage.php` to `yourtheme/woocommerce/emails/shilpi-os-stage.php`
 * `templates/emails/plain/shilpi-os-stage.php` to `yourtheme/woocommerce/emails/plain/shilpi-os-stage.php`
-* `templates/emails/parts/shilpi-os-progress.php` and `shilpi-os-shipment.php` to `yourtheme/woocommerce/emails/parts/`
+* `templates/emails/parts/shilpi-os-progress.php`, `shilpi-os-shipment.php` and `shilpi-os-review-button.php` to `yourtheme/woocommerce/emails/parts/`
 * `templates/myaccount/shilpi-os-timeline.php` and `shilpi-os-track-form.php` to `yourtheme/woocommerce/myaccount/`
 
 = Which placeholders can I use in emails? =
 
-`{customer_first_name}`, `{order_number}`, `{order_date}`, `{product_names}`, `{eta}`, `{tracking_number}`, `{tracking_url}`, `{shipping_address}` and `{site_title}`.
+`{customer_first_name}`, `{order_number}`, `{order_date}`, `{product_names}`, `{eta}`, `{tracking_number}`, `{tracking_url}`, `{shipping_address}`, `{review_url}` and `{site_title}`. The Delivery estimate updated email also supports `{old_eta}` and `{new_eta}`.
 
 = When is the customer emailed? =
 
@@ -91,6 +91,10 @@ Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` a
 * Fixed: the "Email the customer about the new ETA" checkbox no longer stretches full width; it sits inline with its label.
 * Improved: the ETA checkbox is always shown (disabled until the ETA changes), so nothing moves on the page while editing.
 * Improved: the "Order stage" box is placed directly under "Order actions" on both order screens.
+* New: "Review URL" setting. The Delivered email shows a "Leave a review" button when it is set, and the {review_url} placeholder is available in all emails.
+* New: "Email accent colour" setting for the current stage dot and the review button (defaults to the WooCommerce email base colour).
+* Improved: the Delivered email shows all nine steps as green checks and the word "Delivered" instead of "Step 9 of 9".
+* Improved: the email shipment table no longer repeats the current stage, and the Delivered email has no tracking row.
 
 = 1.1.1 =
 * Fixed: order notes written by Action Scheduler, cron, REST, WP-CLI or gateways now use admin stage names. Customer names are used only in My Account, the order received page, the tracking shortcode and customer emails.

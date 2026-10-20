@@ -14,9 +14,9 @@ defined( 'ABSPATH' ) || exit;
 
 $shilpi_os_steps  = Shilpi_OS_Stages::timeline( $order, $stage );
 $shilpi_os_total  = count( $shilpi_os_steps );
-$shilpi_os_accent = sanitize_hex_color( get_option( 'woocommerce_email_base_color', '#2271b1' ) );
-$shilpi_os_accent = $shilpi_os_accent ? $shilpi_os_accent : '#2271b1';
+$shilpi_os_accent = Shilpi_OS_Settings::email_accent();
 $shilpi_os_pos    = Shilpi_OS_Stages::index( $stage );
+$shilpi_os_final  = $shilpi_os_pos === $shilpi_os_total - 1;
 $shilpi_os_font   = 'font-family:Arial, Helvetica, sans-serif;';
 ?>
 <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 8px; border-collapse:collapse;">
@@ -28,7 +28,8 @@ $shilpi_os_font   = 'font-family:Arial, Helvetica, sans-serif;';
 				$shilpi_os_bg    = '#b8e0c2';
 				$shilpi_os_color = '#ffffff';
 				$shilpi_os_mark  = '&#10003;';
-			} elseif ( 'done' === $shilpi_os_step['state'] ) {
+			} elseif ( 'done' === $shilpi_os_step['state'] || $shilpi_os_final ) {
+				// Delivered: every step, including the last, is a green check.
 				$shilpi_os_bg    = '#00a32a';
 				$shilpi_os_color = '#ffffff';
 				$shilpi_os_mark  = '&#10003;';
@@ -51,7 +52,11 @@ $shilpi_os_font   = 'font-family:Arial, Helvetica, sans-serif;';
 		<?php endforeach; ?>
 	</tr>
 </table>
-<?php if ( $shilpi_os_pos >= 0 ) : ?>
+<?php if ( $shilpi_os_final ) : ?>
+	<p style="margin:0 0 24px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:15px; font-weight:bold; color:#00a32a;">
+		<?php echo esc_html( $shilpi_os_steps[ $shilpi_os_pos ]['short'] ); ?>
+	</p>
+<?php elseif ( $shilpi_os_pos >= 0 ) : ?>
 	<p style="margin:0 0 4px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:15px; font-weight:bold;">
 		<?php
 		echo esc_html(

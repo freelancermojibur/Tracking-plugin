@@ -36,11 +36,15 @@ echo "=================================================\n\n";
 
 echo $shilpi_os_txt( $message ) . "\n\n";
 
+if ( 'completed' === $stage && Shilpi_OS_Settings::review_url() ) {
+	echo $shilpi_os_txt( __( 'Leave a review:', 'shilpi-order-stages' ) ) . ' ' . esc_url_raw( Shilpi_OS_Settings::review_url() ) . "\n\n";
+}
+
 echo $shilpi_os_txt( __( 'Progress', 'shilpi-order-stages' ) ) . "\n";
 foreach ( Shilpi_OS_Stages::timeline( $order, $stage ) as $shilpi_os_i => $shilpi_os_step ) {
 	if ( ! empty( $shilpi_os_step['skipped'] ) ) {
 		$shilpi_os_mark = '[-]';
-	} elseif ( 'done' === $shilpi_os_step['state'] ) {
+	} elseif ( 'done' === $shilpi_os_step['state'] || 'completed' === $stage ) {
 		$shilpi_os_mark = '[x]';
 	} elseif ( 'current' === $shilpi_os_step['state'] ) {
 		$shilpi_os_mark = '[>]';
@@ -57,8 +61,9 @@ if ( 'completed' !== $stage ) {
 	$shilpi_os_eta = Shilpi_OS_Meta_Box::eta_display( $order );
 	echo $shilpi_os_txt( __( 'Estimated delivery:', 'shilpi-order-stages' ) . ' ' . ( $shilpi_os_eta ? $shilpi_os_eta : __( 'To be confirmed', 'shilpi-order-stages' ) ) ) . "\n";
 }
-$shilpi_os_tracking = Shilpi_OS_Meta_Box::get( $order, 'tracking_number' );
-$shilpi_os_url      = Shilpi_OS_Meta_Box::get( $order, 'tracking_url' );
+// Delivered emails do not repeat tracking details.
+$shilpi_os_tracking = 'completed' === $stage ? '' : Shilpi_OS_Meta_Box::get( $order, 'tracking_number' );
+$shilpi_os_url      = 'completed' === $stage ? '' : Shilpi_OS_Meta_Box::get( $order, 'tracking_url' );
 if ( $shilpi_os_tracking ) {
 	echo $shilpi_os_txt( __( 'Tracking number:', 'shilpi-order-stages' ) . ' ' . $shilpi_os_tracking ) . "\n";
 }

@@ -44,6 +44,8 @@ class Shilpi_OS_Settings {
 			'replace_processing' => 'yes',
 			'overdue_enabled'    => 'yes',
 			'overdue_email'      => get_option( 'admin_email' ),
+			'review_url'         => '',
+			'email_accent'       => '',
 		);
 	}
 
@@ -70,6 +72,28 @@ class Shilpi_OS_Settings {
 	 */
 	public static function enabled( $key ) {
 		return 'yes' === self::get( $key );
+	}
+
+	/**
+	 * Review URL for the Delivered email, or empty string.
+	 *
+	 * @return string
+	 */
+	public static function review_url() {
+		return esc_url_raw( trim( (string) self::get( 'review_url' ) ) );
+	}
+
+	/**
+	 * Accent colour for emails: the plugin setting, else the WooCommerce email base colour.
+	 *
+	 * @return string Hex colour.
+	 */
+	public static function email_accent() {
+		$color = sanitize_hex_color( (string) self::get( 'email_accent' ) );
+		if ( ! $color ) {
+			$color = sanitize_hex_color( (string) get_option( 'woocommerce_email_base_color', '' ) );
+		}
+		return $color ? $color : '#2271b1';
 	}
 
 	/**
@@ -156,6 +180,32 @@ class Shilpi_OS_Settings {
 			array(
 				'type' => 'sectionend',
 				'id'   => 'shilpi_os_workflow',
+			),
+			array(
+				'title' => __( 'Emails', 'shilpi-order-stages' ),
+				'type'  => 'title',
+				'id'    => 'shilpi_os_emails',
+			),
+			array(
+				'title'       => __( 'Review URL', 'shilpi-order-stages' ),
+				'desc'        => __( 'When set, the Delivered email shows a "Leave a review" button linking here. Also available as the {review_url} placeholder.', 'shilpi-order-stages' ),
+				'id'          => $this->id( 'review_url' ),
+				'type'        => 'url',
+				'default'     => '',
+				'placeholder' => 'https://',
+				'css'         => 'min-width:400px;',
+			),
+			array(
+				'title'   => __( 'Email accent colour', 'shilpi-order-stages' ),
+				'desc'    => __( 'Used for the current stage dot and the review button. Leave empty to use the WooCommerce email base colour.', 'shilpi-order-stages' ),
+				'id'      => $this->id( 'email_accent' ),
+				'type'    => 'color',
+				'default' => '',
+				'css'     => 'width:6em;',
+			),
+			array(
+				'type' => 'sectionend',
+				'id'   => 'shilpi_os_emails',
 			),
 			array(
 				'title' => __( 'Overdue alerts', 'shilpi-order-stages' ),

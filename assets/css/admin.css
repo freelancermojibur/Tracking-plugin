@@ -1,5 +1,4 @@
 /* Shilpi Order Stages admin styles. */
-.shilpi-os-stage-bar { background: #f6f7f7; border: 1px solid #dcdcde; padding: 4px 12px; margin-bottom: 12px; }
 .shilpi-os-fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0 16px; }
 .shilpi-os-fields .form-field label { display: block; font-weight: 600; margin-bottom: 4px; }
 .shilpi-os-fields .form-field input,
@@ -18,3 +17,21 @@
 .shilpi-os-overdue { color: #d63638; font-weight: 600; }
 .woocommerce_page_shilpi-os-dashboard mark.order-status { display: inline-flex; line-height: 2.5em; border-radius: 4px; padding: 0 1em; background: #e5e5e5; color: #454545; white-space: nowrap; }
 .shilpi-os-card.is-neutral { border-left-color: #8c8f94; }
+.shilpi-os-current { margin-top: 0; }
+.shilpi-os-stepper { display: flex; align-items: center; margin: 8px 0 12px; padding: 0; list-style: none; }
+.shilpi-os-stepper li { position: relative; flex: 1 1 0; height: 12px; margin: 0; }
+.shilpi-os-stepper li::before { content: ""; position: absolute; top: 5px; left: 0; right: 0; height: 2px; background: #dcdcde; }
+.shilpi-os-stepper li:first-child::before { left: 50%; }
+.shilpi-os-stepper li:last-child::before { right: 50%; }
+.shilpi-os-stepper li::after { content: ""; position: absolute; top: 0; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #dcdcde; box-sizing: border-box; }
+.shilpi-os-stepper li.is-done::before { background: #00a32a; }
+.shilpi-os-stepper li.is-done::after { background: #00a32a; }
+.shilpi-os-stepper li.is-current::after { background: #fff; border: 3px solid #2271b1; }
+.shilpi-os-stage-box .button.shilpi-os-next { white-space: normal; height: auto; min-height: 32px; line-height: 1.4; padding: 6px 12px; width: 100%; text-align: center; }
+.shilpi-os-fields .form-field label.shilpi-os-eta-notify { display: block; margin-top: 6px; font-weight: 400; }
+.js .shilpi-os-fields .form-field label.shilpi-os-eta-notify { display: none; }
+.js .shilpi-os-fields .form-field label.shilpi-os-eta-notify.is-visible { display: block; }
+.shilpi-os-pipeline { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin: 0 0 24px; }
+.shilpi-os-pipeline a { display: block; background: #fff; border: 1px solid #c3c4c7; border-top: 3px solid #8c8f94; padding: 8px 10px; text-decoration: none; color: #1d2327; font-size: 12px; line-height: 1.3; }
+.shilpi-os-pipeline a:hover { border-color: #2271b1; }
+.shilpi-os-pipeline strong { display: block; font-size: 20px; }

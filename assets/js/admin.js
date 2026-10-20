@@ -10,6 +10,14 @@
 	}
 
 	$( function () {
+		var $eta = $( '#shilpi_os_eta' ),
+			etaStart = $eta.val();
+		$eta.on( 'change input', function () {
+			$( '.shilpi-os-eta-notify' ).toggleClass( 'is-visible', $eta.val() !== etaStart );
+		} );
+	} );
+
+	$( function () {
 		var $profit = $( '.shilpi-os-profit' );
 		if ( ! $profit.length ) {
 			return;

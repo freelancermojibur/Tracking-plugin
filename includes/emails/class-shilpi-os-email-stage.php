@@ -39,15 +39,18 @@ abstract class Shilpi_OS_Email_Stage extends WC_Email {
 		$this->template_base  = SHILPI_OS_PATH . 'templates/';
 		$this->template_html  = 'emails/shilpi-os-stage.php';
 		$this->template_plain = 'emails/plain/shilpi-os-stage.php';
-		$this->placeholders   = array(
-			'{customer_first_name}' => '',
-			'{order_number}'        => '',
-			'{order_date}'          => '',
-			'{product_names}'       => '',
-			'{eta}'                 => '',
-			'{tracking_number}'     => '',
-			'{tracking_url}'        => '',
-			'{shipping_address}'    => '',
+		$this->placeholders   = array_merge(
+			array(
+				'{customer_first_name}' => '',
+				'{order_number}'        => '',
+				'{order_date}'          => '',
+				'{product_names}'       => '',
+				'{eta}'                 => '',
+				'{tracking_number}'     => '',
+				'{tracking_url}'        => '',
+				'{shipping_address}'    => '',
+			),
+			$this->placeholders
 		);
 
 		parent::__construct();

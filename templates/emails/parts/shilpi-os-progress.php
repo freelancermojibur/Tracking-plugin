@@ -1,6 +1,7 @@
 <?php
 /**
- * Email progress bar. Table based with inline styles for Gmail and Outlook.
+ * Email progress bar: a row of numbered dots, then "Step X of 9: Stage" and the next step.
+ * Table based with inline styles only, so it works in Gmail and Outlook at any width.
  *
  * Override by copying to yourtheme/woocommerce/emails/parts/shilpi-os-progress.php.
  *
@@ -12,11 +13,13 @@
 defined( 'ABSPATH' ) || exit;
 
 $shilpi_os_steps  = Shilpi_OS_Stages::timeline( $order, $stage );
+$shilpi_os_total  = count( $shilpi_os_steps );
 $shilpi_os_accent = sanitize_hex_color( get_option( 'woocommerce_email_base_color', '#2271b1' ) );
 $shilpi_os_accent = $shilpi_os_accent ? $shilpi_os_accent : '#2271b1';
-$shilpi_os_width  = floor( 100 / max( 1, count( $shilpi_os_steps ) ) );
+$shilpi_os_pos    = Shilpi_OS_Stages::index( $stage );
+$shilpi_os_font   = 'font-family:Arial, Helvetica, sans-serif;';
 ?>
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="width:100%; margin:0 0 24px; border-collapse:collapse;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 8px; border-collapse:collapse;">
 	<tr>
 		<?php
 		foreach ( $shilpi_os_steps as $shilpi_os_i => $shilpi_os_step ) :
@@ -34,18 +37,37 @@ $shilpi_os_width  = floor( 100 / max( 1, count( $shilpi_os_steps ) ) );
 				$shilpi_os_mark  = (string) ( $shilpi_os_i + 1 );
 			}
 			?>
-			<td align="center" valign="top" width="<?php echo esc_attr( $shilpi_os_width ); ?>%" style="width:<?php echo esc_attr( $shilpi_os_width ); ?>%; padding:0 1px; text-align:center; vertical-align:top;">
-				<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto; border-collapse:collapse;">
-					<tr>
-						<td width="26" height="26" bgcolor="<?php echo esc_attr( $shilpi_os_bg ); ?>" align="center" valign="middle" style="width:26px; min-width:26px; max-width:26px; height:26px; padding:0; background-color:<?php echo esc_attr( $shilpi_os_bg ); ?>; color:<?php echo esc_attr( $shilpi_os_color ); ?>; border-radius:13px; font-family:Arial, Helvetica, sans-serif; font-size:12px; font-weight:bold; line-height:26px; text-align:center;">
-							<?php echo wp_kses_post( $shilpi_os_mark ); ?>
-						</td>
-					</tr>
-				</table>
-				<div style="font-family:Arial, Helvetica, sans-serif; font-size:10px; line-height:13px; margin-top:4px; color:<?php echo 'current' === $shilpi_os_step['state'] ? esc_attr( $shilpi_os_accent ) : '#555555'; ?>; <?php echo 'current' === $shilpi_os_step['state'] ? 'font-weight:bold;' : ''; ?>">
-					<?php echo esc_html( $shilpi_os_step['short'] ); ?>
-				</div>
+			<td width="22" height="22" bgcolor="<?php echo esc_attr( $shilpi_os_bg ); ?>" align="center" valign="middle" title="<?php echo esc_attr( $shilpi_os_step['short'] ); ?>" style="width:22px; min-width:22px; max-width:22px; height:22px; padding:0; background-color:<?php echo esc_attr( $shilpi_os_bg ); ?>; color:<?php echo esc_attr( $shilpi_os_color ); ?>; border-radius:11px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:11px; font-weight:bold; line-height:22px; text-align:center;">
+				<?php echo wp_kses_post( $shilpi_os_mark ); ?>
 			</td>
+			<?php if ( $shilpi_os_i < $shilpi_os_total - 1 ) : ?>
+				<td width="6" style="width:6px; min-width:6px; padding:0; font-size:1px; line-height:1px;">&nbsp;</td>
+			<?php endif; ?>
 		<?php endforeach; ?>
 	</tr>
 </table>
+<?php if ( $shilpi_os_pos >= 0 ) : ?>
+	<p style="margin:0 0 4px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:15px; font-weight:bold;">
+		<?php
+		echo esc_html(
+			sprintf(
+				/* translators: 1: step number, 2: total steps, 3: stage name */
+				__( 'Step %1$d of %2$d: %3$s', 'shilpi-order-stages' ),
+				$shilpi_os_pos + 1,
+				$shilpi_os_total,
+				$shilpi_os_steps[ $shilpi_os_pos ]['short']
+			)
+		);
+		?>
+	</p>
+	<?php if ( isset( $shilpi_os_steps[ $shilpi_os_pos + 1 ] ) ) : ?>
+		<p style="margin:0 0 24px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:13px; color:#777777;">
+			<?php
+			/* translators: %s: next stage name */
+			echo esc_html( sprintf( __( 'Next: %s', 'shilpi-order-stages' ), $shilpi_os_steps[ $shilpi_os_pos + 1 ]['short'] ) );
+			?>
+		</p>
+	<?php else : ?>
+		<div style="height:20px; line-height:20px; font-size:1px;">&nbsp;</div>
+	<?php endif; ?>
+<?php endif; ?>

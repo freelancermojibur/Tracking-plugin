@@ -53,6 +53,7 @@ class Shilpi_OS_Emails {
 				$emails[ $class ] = new $class();
 			}
 		}
+		$emails['Shilpi_OS_Email_Eta_Updated'] = new Shilpi_OS_Email_Eta_Updated();
 		return $emails;
 	}
 
@@ -69,6 +70,16 @@ class Shilpi_OS_Emails {
 		}
 		$emails = WC()->mailer()->get_emails();
 		return isset( $emails[ $classes[ $stage ] ] ) ? $emails[ $classes[ $stage ] ] : null;
+	}
+
+	/**
+	 * Get the "Delivery estimate updated" email object.
+	 *
+	 * @return Shilpi_OS_Email_Eta_Updated|null
+	 */
+	public static function get_eta_email() {
+		$emails = WC()->mailer()->get_emails();
+		return isset( $emails['Shilpi_OS_Email_Eta_Updated'] ) ? $emails['Shilpi_OS_Email_Eta_Updated'] : null;
 	}
 
 	/**

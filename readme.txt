@@ -25,7 +25,7 @@ The store owner only changes the stage. Everything else happens automatically: t
 * Coloured stage badges, a stage filter and "Change stage to X" bulk actions (with or without email) on the order list.
 * Shipment & Supplier box on the order screen: supplier, invoice, total cost, freight forwarder, container / BL / vessel, tracking number and URL, ETA, internal notes and calculated profit.
 * "Move to next stage" button and an "Email the customer" checkbox.
-* Nine customer emails, fully editable in WooCommerce > Settings > Emails, with HTML and plain text versions and an email client safe progress bar.
+* Nine stage emails plus a "Delivery estimate updated" email, fully editable in WooCommerce > Settings > Emails, with HTML and plain text versions and an email client safe progress bar.
 * No email on backward moves, no duplicate emails for the same stage.
 * Optional replacement of the core Completed email with the Delivered stage email.
 * Customer timeline on My Account > View order and on the order received page.
@@ -92,6 +92,15 @@ Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` a
 * Improved: new orders are moved to the first stage in a background Action Scheduler task after payment completes, avoiding conflicts with payment gateways.
 * New: dashboard card for orders still in Processing, with buttons to move them to the first stage with or without email.
 * New: build script `bin/build.sh` that creates `dist/shilpi-order-stages.zip`.
+* New: "Order stage" side box on the order screen with a mini stepper, the next stage button and the email checkbox. Shipment fields stay in the main box.
+* New: the next stage button is ignored (with a notice) when the Status dropdown was also changed in the same save.
+* New: order action "Resend current stage email to customer".
+* New: "Delivery estimate updated" email, sent when the ETA changes and "Email the customer about the new ETA" is ticked.
+* New: dashboard pipeline with a count per stage; "In transit / at port" links to the order list filtered to stages 5 to 7. The stage filter accepts a comma separated list.
+* Improved: email progress bar is mobile friendly (dots, then "Step X of 9" and the next step).
+* Improved: the customer timeline is hidden for old orders that never used stages.
+* Improved: bulk actions are grouped as "Stage: X" and "Stage (no email): X"; the duplicate "Delivered" entry was removed.
+* Fixed: plain text emails no longer show "&amp;" for "&".
 * Tested with WooCommerce 11.2.
 
 = 1.0.0 =

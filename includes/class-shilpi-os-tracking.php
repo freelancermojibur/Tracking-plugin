@@ -38,13 +38,23 @@ class Shilpi_OS_Tracking {
 	}
 
 	/**
-	 * Whether the order should show a timeline.
+	 * Whether the order should show a timeline: it is in a custom stage now, or it is
+	 * Delivered and actually went through the stages (has stage dates for stages 1 to 8).
 	 *
 	 * @param WC_Order|false $order Order.
 	 * @return bool
 	 */
 	private function has_timeline( $order ) {
-		return $order instanceof WC_Order && ( Shilpi_OS_Stages::is_stage( $order->get_status() ) || 'processing' === $order->get_status() );
+		if ( ! $order instanceof WC_Order ) {
+			return false;
+		}
+		$status = $order->get_status();
+		if ( array_key_exists( $status, Shilpi_OS_Stages::get_custom_stages() ) ) {
+			return true;
+		}
+		// Delivered orders: only when at least one of stages 1 to 8 was actually reached.
+		$dates = array_intersect_key( Shilpi_OS_Stage_Changer::get_dates( $order ), Shilpi_OS_Stages::get_custom_stages() );
+		return Shilpi_OS_Stages::is_stage( $status ) && ! empty( $dates );
 	}
 
 	/**

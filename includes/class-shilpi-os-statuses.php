@@ -186,26 +186,50 @@ class Shilpi_OS_Statuses {
 	/**
 	 * Render the stage dropdown.
 	 *
-	 * @param string $current Selected stage.
+	 * @param string[] $current Selected stages.
 	 */
 	private function render_stage_select( $current ) {
+		$value = implode( ',', $current );
 		echo '<select name="shilpi_os_stage" id="shilpi-os-stage-filter">';
 		echo '<option value="">' . esc_html__( 'All stages', 'shilpi-order-stages' ) . '</option>';
+		if ( count( $current ) > 1 ) {
+			$labels = array_map( array( 'Shilpi_OS_Stages', 'label' ), $current );
+			printf( '<option value="%1$s" selected="selected">%2$s</option>', esc_attr( $value ), esc_html( implode( ' + ', $labels ) ) );
+		}
 		foreach ( Shilpi_OS_Stages::get_stages() as $key => $stage ) {
-			printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $key ), selected( $current, $key, false ), esc_html( $stage['label'] ) );
+			printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $key ), selected( $value, $key, false ), esc_html( $stage['label'] ) );
 		}
 		echo '</select>';
 	}
 
 	/**
-	 * Get the requested stage filter, validated against the stage list.
+	 * Requested stage filter: one stage or a comma separated list, validated against the stage list.
 	 *
-	 * @return string
+	 * @return string[]
 	 */
-	private function requested_stage() {
+	private function requested_stages() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filter.
-		$stage = isset( $_GET['shilpi_os_stage'] ) ? sanitize_key( wp_unslash( $_GET['shilpi_os_stage'] ) ) : '';
-		return Shilpi_OS_Stages::is_stage( $stage ) ? $stage : '';
+		$raw = isset( $_GET['shilpi_os_stage'] ) ? sanitize_text_field( wp_unslash( $_GET['shilpi_os_stage'] ) ) : '';
+		if ( '' === $raw ) {
+			return array();
+		}
+		$stages = array_filter( array_map( 'sanitize_key', explode( ',', $raw ) ), array( 'Shilpi_OS_Stages', 'is_stage' ) );
+		return array_values( array_unique( $stages ) );
+	}
+
+	/**
+	 * Stage keys with the "wc-" prefix.
+	 *
+	 * @param string[] $stages Stages.
+	 * @return string[]
+	 */
+	private static function prefixed( $stages ) {
+		return array_map(
+			function ( $stage ) {
+				return 'wc-' . $stage;
+			},
+			$stages
+		);
 	}
 
 	/**
@@ -215,7 +239,7 @@ class Shilpi_OS_Statuses {
 	 */
 	public function legacy_stage_filter( $post_type ) {
 		if ( 'shop_order' === $post_type ) {
-			$this->render_stage_select( $this->requested_stage() );
+			$this->render_stage_select( $this->requested_stages() );
 		}
 	}
 
@@ -228,9 +252,9 @@ class Shilpi_OS_Statuses {
 	public function legacy_filter_request( $vars ) {
 		global $typenow;
 		if ( is_admin() && 'shop_order' === $typenow ) {
-			$stage = $this->requested_stage();
-			if ( $stage ) {
-				$vars['post_status'] = 'wc-' . $stage;
+			$stages = $this->requested_stages();
+			if ( $stages ) {
+				$vars['post_status'] = self::prefixed( $stages );
 			}
 		}
 		return $vars;
@@ -243,7 +267,7 @@ class Shilpi_OS_Statuses {
 	 */
 	public function hpos_stage_filter( $order_type = 'shop_order' ) {
 		if ( 'shop_order' === $order_type ) {
-			$this->render_stage_select( $this->requested_stage() );
+			$this->render_stage_select( $this->requested_stages() );
 		}
 	}
 
@@ -254,27 +278,28 @@ class Shilpi_OS_Statuses {
 	 * @return array
 	 */
 	public function hpos_filter_query( $args ) {
-		$stage = $this->requested_stage();
-		if ( $stage ) {
-			$args['status'] = array( 'wc-' . $stage );
+		$stages = $this->requested_stages();
+		if ( $stages ) {
+			$args['status'] = self::prefixed( $stages );
 		}
 		return $args;
 	}
 
 	/**
-	 * Add "Change stage to X" bulk actions. WooCommerce core handles "mark_{status}".
+	 * Add "Stage: X" and "Stage (no email): X" bulk actions. WooCommerce core handles "mark_{status}"
+	 * and already offers "Change status to completed", so Delivered only gets the no email variant.
 	 *
 	 * @param array $actions Actions.
 	 * @return array
 	 */
 	public function bulk_actions( $actions ) {
-		foreach ( Shilpi_OS_Stages::get_stages() as $key => $stage ) {
+		foreach ( Shilpi_OS_Stages::get_custom_stages() as $key => $stage ) {
 			/* translators: %s: stage name */
-			$actions[ 'mark_' . $key ] = sprintf( __( 'Change stage to %s', 'shilpi-order-stages' ), $stage['label'] );
+			$actions[ 'mark_' . $key ] = sprintf( __( 'Stage: %s', 'shilpi-order-stages' ), $stage['label'] );
 		}
 		foreach ( Shilpi_OS_Stages::get_stages() as $key => $stage ) {
 			/* translators: %s: stage name */
-			$actions[ 'shilpi_os_quiet_' . $key ] = sprintf( __( 'Change stage to %s (no email)', 'shilpi-order-stages' ), $stage['label'] );
+			$actions[ 'shilpi_os_quiet_' . $key ] = sprintf( __( 'Stage (no email): %s', 'shilpi-order-stages' ), $stage['label'] );
 		}
 		return $actions;
 	}

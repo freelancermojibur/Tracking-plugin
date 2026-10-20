@@ -161,6 +161,41 @@ class Shilpi_OS_Dashboard {
 	}
 
 	/**
+	 * URL of the order list filtered by one or more stages (shilpi_os_stage filter).
+	 *
+	 * @param string[] $stages Stage keys.
+	 * @return string
+	 */
+	private function stage_url( $stages ) {
+		$base = Shilpi_OS_Plugin::hpos_enabled()
+			? add_query_arg( 'page', 'wc-orders', admin_url( 'admin.php' ) )
+			: add_query_arg( 'post_type', 'shop_order', admin_url( 'edit.php' ) );
+		return add_query_arg( 'shilpi_os_stage', implode( ',', $stages ), $base );
+	}
+
+	/**
+	 * Number of orders per stage.
+	 *
+	 * @return int[] Stage key => count.
+	 */
+	private function stage_counts() {
+		$counts = array();
+		foreach ( array_keys( Shilpi_OS_Stages::get_stages() ) as $key ) {
+			$result         = wc_get_orders(
+				array(
+					'type'     => 'shop_order',
+					'status'   => array( $key ),
+					'limit'    => 1,
+					'return'   => 'ids',
+					'paginate' => true,
+				)
+			);
+			$counts[ $key ] = (int) $result->total;
+		}
+		return $counts;
+	}
+
+	/**
 	 * Render the dashboard.
 	 */
 	public function render() {
@@ -198,7 +233,7 @@ class Shilpi_OS_Dashboard {
 			array( __( 'Waiting to start (Processing)', 'shilpi-order-stages' ), count( $processing ), 'is-neutral', $this->list_url( 'processing' ) ),
 			array( __( 'Active orders', 'shilpi-order-stages' ), count( $orders ), 'is-info', $this->list_url() ),
 			array( __( 'To pay supplier', 'shilpi-order-stages' ), $to_pay, 'is-warning', $this->list_url( $keys[0] ) ),
-			array( __( 'In transit / at port', 'shilpi-order-stages' ), $in_transit, 'is-ok', '#shilpi-os-upcoming' ),
+			array( __( 'In transit / at port', 'shilpi-order-stages' ), $in_transit, 'is-ok', $this->stage_url( $transit ) ),
 			array( __( 'Overdue', 'shilpi-order-stages' ), count( $overdue ), 'is-danger', '#shilpi-os-overdue' ),
 		);
 		?>
@@ -257,6 +292,20 @@ class Shilpi_OS_Dashboard {
 					<a class="shilpi-os-card <?php echo esc_attr( $card[2] ); ?>" href="<?php echo esc_url( $card[3] ); ?>">
 						<span class="shilpi-os-num"><?php echo esc_html( number_format_i18n( $card[1] ) ); ?></span>
 						<?php echo esc_html( $card[0] ); ?>
+					</a>
+				<?php endforeach; ?>
+			</div>
+
+			<h2><?php esc_html_e( 'Pipeline', 'shilpi-order-stages' ); ?></h2>
+			<div class="shilpi-os-pipeline">
+				<?php
+				$stages = Shilpi_OS_Stages::get_stages();
+				foreach ( $this->stage_counts() as $key => $count ) :
+					$color = sanitize_hex_color( $stages[ $key ]['color'] );
+					?>
+					<a href="<?php echo esc_url( $this->stage_url( array( $key ) ) ); ?>" style="border-top-color:<?php echo esc_attr( $color ? $color : '#8c8f94' ); ?>;">
+						<strong><?php echo esc_html( number_format_i18n( $count ) ); ?></strong>
+						<?php echo esc_html( $stages[ $key ]['label'] ); ?>
 					</a>
 				<?php endforeach; ?>
 			</div>

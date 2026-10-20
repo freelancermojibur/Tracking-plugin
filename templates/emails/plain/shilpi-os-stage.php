@@ -18,14 +18,25 @@
 defined( 'ABSPATH' ) || exit;
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core email hooks.
+// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Plain text email: HTML escaping would show "&amp;" to the reader, so text is stripped and decoded instead.
+
+/**
+ * Convert a string to plain text for this email.
+ *
+ * @param string $text Text.
+ * @return string
+ */
+$shilpi_os_txt = static function ( $text ) {
+	return wp_specialchars_decode( wp_strip_all_tags( (string) $text ), ENT_QUOTES );
+};
 
 echo "=================================================\n";
-echo esc_html( wp_strip_all_tags( $email_heading ) ) . "\n";
+echo $shilpi_os_txt( $email_heading ) . "\n";
 echo "=================================================\n\n";
 
-echo esc_html( wp_strip_all_tags( wptexturize( $message ) ) ) . "\n\n";
+echo $shilpi_os_txt( $message ) . "\n\n";
 
-echo esc_html__( 'Progress', 'shilpi-order-stages' ) . "\n";
+echo $shilpi_os_txt( __( 'Progress', 'shilpi-order-stages' ) ) . "\n";
 foreach ( Shilpi_OS_Stages::timeline( $order, $stage ) as $shilpi_os_i => $shilpi_os_step ) {
 	if ( 'done' === $shilpi_os_step['state'] ) {
 		$shilpi_os_mark = '[x]';
@@ -34,22 +45,22 @@ foreach ( Shilpi_OS_Stages::timeline( $order, $stage ) as $shilpi_os_i => $shilp
 	} else {
 		$shilpi_os_mark = '[ ]';
 	}
-	echo esc_html( $shilpi_os_mark . ' ' . ( $shilpi_os_i + 1 ) . '. ' . $shilpi_os_step['short'] ) . "\n";
+	echo $shilpi_os_txt( $shilpi_os_mark . ' ' . ( $shilpi_os_i + 1 ) . '. ' . $shilpi_os_step['short'] ) . "\n";
 }
 echo "\n";
 
-echo esc_html__( 'Current stage:', 'shilpi-order-stages' ) . ' ' . esc_html( Shilpi_OS_Stages::customer_label( $stage ) ) . "\n";
+echo $shilpi_os_txt( __( 'Current stage:', 'shilpi-order-stages' ) . ' ' . Shilpi_OS_Stages::customer_label( $stage ) ) . "\n";
 if ( 'completed' !== $stage ) {
 	$shilpi_os_eta = Shilpi_OS_Meta_Box::eta_display( $order );
-	echo esc_html__( 'Estimated delivery:', 'shilpi-order-stages' ) . ' ' . esc_html( $shilpi_os_eta ? $shilpi_os_eta : __( 'To be confirmed', 'shilpi-order-stages' ) ) . "\n";
+	echo $shilpi_os_txt( __( 'Estimated delivery:', 'shilpi-order-stages' ) . ' ' . ( $shilpi_os_eta ? $shilpi_os_eta : __( 'To be confirmed', 'shilpi-order-stages' ) ) ) . "\n";
 }
 $shilpi_os_tracking = Shilpi_OS_Meta_Box::get( $order, 'tracking_number' );
 $shilpi_os_url      = Shilpi_OS_Meta_Box::get( $order, 'tracking_url' );
 if ( $shilpi_os_tracking ) {
-	echo esc_html__( 'Tracking number:', 'shilpi-order-stages' ) . ' ' . esc_html( $shilpi_os_tracking ) . "\n";
+	echo $shilpi_os_txt( __( 'Tracking number:', 'shilpi-order-stages' ) . ' ' . $shilpi_os_tracking ) . "\n";
 }
 if ( $shilpi_os_url ) {
-	echo esc_html__( 'Track your shipment:', 'shilpi-order-stages' ) . ' ' . esc_url_raw( $shilpi_os_url ) . "\n";
+	echo $shilpi_os_txt( __( 'Track your shipment:', 'shilpi-order-stages' ) ) . ' ' . esc_url_raw( $shilpi_os_url ) . "\n";
 }
 echo "\n----------------------------------------\n\n";
 
@@ -60,8 +71,8 @@ echo "\n----------------------------------------\n\n";
 do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_text, $email );
 
 if ( $additional_content ) {
-	echo "\n" . esc_html( wp_strip_all_tags( wptexturize( $additional_content ) ) ) . "\n";
+	echo "\n" . $shilpi_os_txt( $additional_content ) . "\n";
 }
 
 echo "\n----------------------------------------\n\n";
-echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );
+echo $shilpi_os_txt( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );

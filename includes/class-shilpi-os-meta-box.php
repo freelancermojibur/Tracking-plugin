@@ -203,6 +203,7 @@ class Shilpi_OS_Meta_Box {
 		if ( ! $this->verified() ) {
 			return;
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Nonce checked in verified().
 		$order = wc_get_order( $order_id );
 		if ( ! $order ) {
 			return;
@@ -237,6 +238,7 @@ class Shilpi_OS_Meta_Box {
 				$order->update_meta_data( '_shilpi_os_' . $key, $value );
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$order->save();
 	}
 
@@ -246,7 +248,7 @@ class Shilpi_OS_Meta_Box {
 	 * @param int $order_id Order ID.
 	 */
 	public function move_next( $order_id ) {
-		if ( empty( $_POST['shilpi_os_next_stage'] ) || ! $this->verified() ) {
+		if ( ! $this->verified() || empty( $_POST['shilpi_os_next_stage'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce checked in verified().
 			return;
 		}
 		$order = wc_get_order( $order_id );

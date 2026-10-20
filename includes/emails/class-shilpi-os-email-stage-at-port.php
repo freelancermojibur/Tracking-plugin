@@ -30,9 +30,7 @@ class Shilpi_OS_Email_Stage_At_Port extends Shilpi_OS_Email_Stage {
 		return array(
 			'subject'    => __( 'Your order #{order_number} has arrived in Australia', 'shilpi-order-stages' ),
 			'heading'    => __( 'Landed in Australia', 'shilpi-order-stages' ),
-			'message'    => __( 'Hi {customer_first_name},
-
-Your order #{order_number} has arrived at the Australian port. Next it will go through customs clearance, which is a standard step for all imported goods.', 'shilpi-order-stages' ),
+			'message'    => __( "Hi {customer_first_name},\n\nYour order #{order_number} has arrived at the Australian port. Next it will go through customs clearance, which is a standard step for all imported goods.", 'shilpi-order-stages' ),
 			'additional' => __( 'We are getting closer. We will update you again once customs clearance begins.', 'shilpi-order-stages' ),
 		);
 	}

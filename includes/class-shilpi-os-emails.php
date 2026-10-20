@@ -18,7 +18,7 @@ class Shilpi_OS_Emails {
 	public function __construct() {
 		add_filter( 'woocommerce_email_classes', array( $this, 'register' ) );
 		add_filter( 'shilpi_os_send_stage_email', array( $this, 'send' ), 10, 3 );
-		add_filter( 'woocommerce_email_enabled_customer_completed_order', array( $this, 'maybe_disable_core_completed' ), 20, 2 );
+		add_filter( 'woocommerce_email_enabled_customer_completed_order', array( $this, 'maybe_disable_core_completed' ), 20 );
 	}
 
 	/**
@@ -90,11 +90,10 @@ class Shilpi_OS_Emails {
 	/**
 	 * Turn off the core Completed email when our Delivered email replaces it or emails are suppressed.
 	 *
-	 * @param bool          $enabled Enabled.
-	 * @param WC_Order|null $order   Order.
+	 * @param bool $enabled Enabled.
 	 * @return bool
 	 */
-	public function maybe_disable_core_completed( $enabled, $order = null ) {
+	public function maybe_disable_core_completed( $enabled ) {
 		// "Email the customer" unchecked or a "no email" bulk action also covers the core email.
 		if ( Shilpi_OS_Stage_Changer::emails_suppressed() ) {
 			return false;

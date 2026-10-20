@@ -33,7 +33,7 @@ abstract class Shilpi_OS_Email_Stage extends WC_Email {
 		$position             = Shilpi_OS_Stages::index( $this->stage ) + 1;
 		$this->customer_email = true;
 		/* translators: 1: stage number, 2: stage name */
-		$this->title          = sprintf( __( 'Order stage %1$d: %2$s', 'shilpi-order-stages' ), $position, Shilpi_OS_Stages::label( $this->stage ) );
+		$this->title = sprintf( __( 'Order stage %1$d: %2$s', 'shilpi-order-stages' ), $position, Shilpi_OS_Stages::label( $this->stage ) );
 		/* translators: %s: stage name */
 		$this->description    = sprintf( __( 'Sent to the customer when their order moves forward to "%s".', 'shilpi-order-stages' ), Shilpi_OS_Stages::label( $this->stage ) );
 		$this->template_base  = SHILPI_OS_PATH . 'templates/';

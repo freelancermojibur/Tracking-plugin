@@ -151,15 +151,15 @@ class Shilpi_OS_Dashboard {
 			wp_die( esc_html__( 'You do not have permission to view this page.', 'shilpi-order-stages' ) );
 		}
 
-		$orders    = self::active_orders();
-		$overdue   = self::overdue_orders( $orders );
-		$today     = self::today();
-		$limit     = wp_date( 'Y-m-d', time() + self::UPCOMING_DAYS * DAY_IN_SECONDS );
-		$keys      = array_keys( Shilpi_OS_Stages::get_custom_stages() );
-		$transit   = array_slice( $keys, 4, 3 );
-		$to_pay    = 0;
+		$orders     = self::active_orders();
+		$overdue    = self::overdue_orders( $orders );
+		$today      = self::today();
+		$limit      = wp_date( 'Y-m-d', time() + self::UPCOMING_DAYS * DAY_IN_SECONDS );
+		$keys       = array_keys( Shilpi_OS_Stages::get_custom_stages() );
+		$transit    = array_slice( $keys, 4, 3 );
+		$to_pay     = 0;
 		$in_transit = 0;
-		$upcoming  = array();
+		$upcoming   = array();
 
 		foreach ( $orders as $order ) {
 			$status = $order->get_status();
@@ -227,9 +227,9 @@ class Shilpi_OS_Dashboard {
 	 * Render an orders table.
 	 *
 	 * @param WC_Order[] $orders Orders.
-	 * @param string     $empty  Message when empty.
+	 * @param string     $empty_text Message when empty.
 	 */
-	private function table( $orders, $empty ) {
+	private function table( $orders, $empty_text ) {
 		?>
 		<table class="wp-list-table widefat fixed striped">
 			<thead>
@@ -244,7 +244,7 @@ class Shilpi_OS_Dashboard {
 			</thead>
 			<tbody>
 				<?php if ( ! $orders ) : ?>
-					<tr><td colspan="6"><?php echo esc_html( $empty ); ?></td></tr>
+					<tr><td colspan="6"><?php echo esc_html( $empty_text ); ?></td></tr>
 				<?php endif; ?>
 				<?php
 				foreach ( $orders as $order ) :

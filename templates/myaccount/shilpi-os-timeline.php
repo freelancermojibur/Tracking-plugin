@@ -33,13 +33,13 @@ defined( 'ABSPATH' ) || exit;
 		</p>
 	<?php endif; ?>
 	<ol class="shilpi-os-timeline">
-		<?php foreach ( $steps as $step ) : ?>
-			<li class="shilpi-os-timeline__step is-<?php echo esc_attr( $step['state'] ); ?>"<?php echo 'current' === $step['state'] ? ' aria-current="step"' : ''; ?>>
+		<?php foreach ( $steps as $shilpi_os_step ) : ?>
+			<li class="shilpi-os-timeline__step is-<?php echo esc_attr( $shilpi_os_step['state'] ); ?>"<?php echo 'current' === $shilpi_os_step['state'] ? ' aria-current="step"' : ''; ?>>
 				<span class="shilpi-os-timeline__dot" aria-hidden="true"></span>
-				<span class="shilpi-os-timeline__label"><?php echo esc_html( $step['short'] ); ?></span>
-				<?php if ( $step['date'] ) : ?>
-					<span class="shilpi-os-timeline__date"><?php echo esc_html( wp_date( get_option( 'date_format' ), $step['date'] ) ); ?></span>
-				<?php elseif ( 'done' === $step['state'] ) : ?>
+				<span class="shilpi-os-timeline__label"><?php echo esc_html( $shilpi_os_step['short'] ); ?></span>
+				<?php if ( $shilpi_os_step['date'] ) : ?>
+					<span class="shilpi-os-timeline__date"><?php echo esc_html( wp_date( get_option( 'date_format' ), $shilpi_os_step['date'] ) ); ?></span>
+				<?php elseif ( 'done' === $shilpi_os_step['state'] ) : ?>
 					<span class="shilpi-os-timeline__date"><?php esc_html_e( 'Completed', 'shilpi-order-stages' ); ?></span>
 				<?php endif; ?>
 			</li>

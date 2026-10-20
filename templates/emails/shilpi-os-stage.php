@@ -17,6 +17,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core email hooks.
+
 do_action( 'woocommerce_email_header', $email_heading, $email );
 
 echo wp_kses_post( wpautop( wptexturize( $message ) ) );

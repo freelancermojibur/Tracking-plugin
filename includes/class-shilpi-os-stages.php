@@ -61,7 +61,7 @@ class Shilpi_OS_Stages {
 				'short' => __( 'Out for delivery', 'shilpi-order-stages' ),
 				'color' => '#00a32a',
 			),
-			'completed'     => array(
+			'completed'      => array(
 				'label' => __( 'Delivered', 'shilpi-order-stages' ),
 				'short' => __( 'Delivered', 'shilpi-order-stages' ),
 				'color' => '#007017',

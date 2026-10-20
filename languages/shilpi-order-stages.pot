@@ -1,0 +1,760 @@
+# Copyright (C) 2026 Shilpi
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Shilpi Order Stages 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Tracking-plugin\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-20T06:50:43+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: shilpi-order-stages\n"
+
+#. Plugin Name of the plugin
+#: shilpi-order-stages.php
+msgid "Shilpi Order Stages"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: shilpi-order-stages.php
+msgid "https://mojibur.com"
+msgstr ""
+
+#. Description of the plugin
+#: shilpi-order-stages.php
+msgid "Track every order from supplier payment to delivery with custom WooCommerce order stages, automatic customer emails and a tracking timeline."
+msgstr ""
+
+#. Author of the plugin
+#: shilpi-order-stages.php
+msgid "Shilpi"
+msgstr ""
+
+#. translators: %d: days overdue
+#: includes/class-shilpi-os-cron.php:75
+#, php-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of orders
+#: includes/class-shilpi-os-cron.php:81
+#, php-format
+msgid "%d order has passed its ETA and has not been delivered yet:"
+msgid_plural "%d orders have passed their ETA and have not been delivered yet:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-shilpi-os-cron.php:86
+#: includes/class-shilpi-os-dashboard.php:237
+msgid "Order"
+msgstr ""
+
+#: includes/class-shilpi-os-cron.php:86
+#: includes/class-shilpi-os-dashboard.php:238
+msgid "Customer"
+msgstr ""
+
+#: includes/class-shilpi-os-cron.php:86
+#: includes/class-shilpi-os-dashboard.php:239
+msgid "Stage"
+msgstr ""
+
+#: includes/class-shilpi-os-cron.php:86
+#: includes/class-shilpi-os-dashboard.php:240
+msgid "ETA"
+msgstr ""
+
+#: includes/class-shilpi-os-cron.php:86
+msgid "Overdue by"
+msgstr ""
+
+#: includes/class-shilpi-os-cron.php:90
+msgid "Open the Order Stages dashboard"
+msgstr ""
+
+#. translators: 1: site name, 2: number of orders
+#: includes/class-shilpi-os-cron.php:93
+#, php-format
+msgid "[%1$s] %2$d overdue order(s)"
+msgstr ""
+
+#: includes/class-shilpi-os-cron.php:95
+#: includes/class-shilpi-os-dashboard.php:207
+msgid "Overdue orders"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:32
+#: includes/class-shilpi-os-dashboard.php:33
+#: includes/class-shilpi-os-dashboard.php:187
+#: includes/class-shilpi-os-settings.php:81
+msgid "Order Stages"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:151
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:180
+msgid "Active orders"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:181
+msgid "To pay supplier"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:182
+msgid "In transit / at port"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:183
+msgid "Overdue"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:188
+#: includes/class-shilpi-os-settings.php:94
+msgid "Settings"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:195
+msgid "Overdue alert email sent."
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:195
+msgid "No alert sent: there are no overdue orders, or alerts are turned off."
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:208
+msgid "No overdue orders. Nice work!"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:212
+msgid "Email overdue list now"
+msgstr ""
+
+#. translators: %d: number of days
+#: includes/class-shilpi-os-dashboard.php:218
+#, php-format
+msgid "ETA in the next %d days"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:221
+msgid "No orders due in this period."
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:241
+msgid "Days"
+msgstr ""
+
+#: includes/class-shilpi-os-dashboard.php:242
+msgid "Supplier"
+msgstr ""
+
+#. translators: %d: days overdue
+#: includes/class-shilpi-os-dashboard.php:262
+#, php-format
+msgid "%d day overdue"
+msgid_plural "%d days overdue"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-shilpi-os-dashboard.php:264
+msgid "Today"
+msgstr ""
+
+#. translators: %d: days left
+#: includes/class-shilpi-os-dashboard.php:267
+#, php-format
+msgid "in %d day"
+msgid_plural "in %d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-shilpi-os-dashboard.php:284
+msgid "You do not have permission to do this."
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:32
+msgid "Supplier name"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:33
+msgid "Supplier invoice / PI #"
+msgstr ""
+
+#. translators: %s: currency code
+#: includes/class-shilpi-os-meta-box.php:35
+#, php-format
+msgid "Total cost %s (supplier + freight + duty)"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:36
+msgid "Freight forwarder"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:37
+msgid "Container / BL / vessel"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:38
+msgid "Tracking number"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:39
+msgid "Tracking URL (optional)"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:40
+msgid "Current ETA"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:41
+msgid "Internal notes (never shown to customer)"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:76
+msgid "Shipment & Supplier"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:122
+#: templates/emails/plain/shilpi-os-stage.php:41
+msgid "Current stage:"
+msgstr ""
+
+#. translators: %s: date
+#: includes/class-shilpi-os-meta-box.php:125
+#, php-format
+msgid "since %s"
+msgstr ""
+
+#. translators: %s: next stage name
+#: includes/class-shilpi-os-meta-box.php:132
+#, php-format
+msgid "Move to next stage: %s"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:137
+msgid "Email the customer about this change"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:160
+msgid "Profit:"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:162
+msgid "Enter the total cost to calculate profit."
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:166
+msgid "(order total minus total cost)"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:169
+msgid "Stage history"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:178
+msgid "customer emailed"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:95
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:125
+msgid "Workflow"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:130
+msgid "New orders"
+msgstr ""
+
+#. translators: %s: first stage name
+#: includes/class-shilpi-os-settings.php:133
+#, php-format
+msgid "Automatically move new Processing orders to \"%s\""
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:141
+msgid "Completed email"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:142
+msgid "Replace the WooCommerce \"Completed order\" email with the Delivered stage email"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:152
+msgid "Overdue alerts"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:154
+msgid "Once a day, email a list of orders whose ETA has passed and that are not delivered yet."
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:158
+msgid "Enable alerts"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:159
+msgid "Send the daily overdue alert"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:165
+msgid "Alert email address"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:176
+msgid "Stages"
+msgstr ""
+
+#: includes/class-shilpi-os-settings.php:178
+msgid "Rename stages and choose badge colours. The admin name is used in the order list; the customer name is shown in emails, My Account and the tracking page. Leave blank to use the default."
+msgstr ""
+
+#. translators: %d: stage number
+#: includes/class-shilpi-os-settings.php:188
+#, php-format
+msgid "Stage %d admin name"
+msgstr ""
+
+#. translators: %d: stage number
+#: includes/class-shilpi-os-settings.php:196
+#, php-format
+msgid "Stage %d customer name"
+msgstr ""
+
+#. translators: %d: stage number
+#: includes/class-shilpi-os-settings.php:205
+#, php-format
+msgid "Stage %d badge colour"
+msgstr ""
+
+#: includes/class-shilpi-os-stage-changer.php:113
+msgid "No (order left stage tracking)"
+msgstr ""
+
+#: includes/class-shilpi-os-stage-changer.php:115
+msgid "No (stage moved backwards)"
+msgstr ""
+
+#: includes/class-shilpi-os-stage-changer.php:117
+msgid "No (email option unchecked)"
+msgstr ""
+
+#: includes/class-shilpi-os-stage-changer.php:119
+msgid "No (already sent for this stage)"
+msgstr ""
+
+#: includes/class-shilpi-os-stage-changer.php:133
+msgid "Yes"
+msgstr ""
+
+#: includes/class-shilpi-os-stage-changer.php:135
+msgid "No (email disabled or handled by WooCommerce)"
+msgstr ""
+
+#. translators: 1: date and time, 2: old stage, 3: new stage, 4: emailed yes/no
+#: includes/class-shilpi-os-stage-changer.php:144
+#, php-format
+msgid "Stage changed on %1$s from \"%2$s\" to \"%3$s\". Customer emailed: %4$s."
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:25
+msgid "Supplier unpaid"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:26
+msgid "Order confirmed"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:30
+msgid "Paid, in production"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:31
+msgid "In production"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:35
+#: includes/class-shilpi-os-stages.php:36
+msgid "Factory ready"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:40
+msgid "At forwarder warehouse"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:41
+msgid "At warehouse"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:45
+#: includes/class-shilpi-os-stages.php:46
+msgid "On ship"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:50
+msgid "Arrived at port"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:51
+msgid "At port"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:55
+#: includes/emails/class-shilpi-os-email-stage-customs.php:32
+msgid "Customs clearance"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:56
+msgid "Customs"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:60
+#: includes/class-shilpi-os-stages.php:61
+msgid "Out for delivery"
+msgstr ""
+
+#: includes/class-shilpi-os-stages.php:65
+#: includes/class-shilpi-os-stages.php:66
+msgid "Delivered"
+msgstr ""
+
+#. translators: %s: number of orders
+#: includes/class-shilpi-os-statuses.php:55
+#, php-format
+msgid "%s order"
+msgid_plural "%s orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/class-shilpi-os-statuses.php:190
+msgid "All stages"
+msgstr ""
+
+#. translators: %s: stage name
+#: includes/class-shilpi-os-statuses.php:270
+#, php-format
+msgid "Change stage to %s"
+msgstr ""
+
+#. translators: %s: stage name
+#: includes/class-shilpi-os-statuses.php:274
+#, php-format
+msgid "Change stage to %s (no email)"
+msgstr ""
+
+#: includes/class-shilpi-os-statuses.php:300
+msgid "Stage changed by bulk edit (no email)."
+msgstr ""
+
+#: includes/class-shilpi-os-statuses.php:335
+msgid "Automatically moved to the first stage."
+msgstr ""
+
+#: includes/class-shilpi-os-tracking.php:154
+msgid "Your session has expired. Please refresh the page and try again."
+msgstr ""
+
+#: includes/class-shilpi-os-tracking.php:156
+msgid "Too many attempts. Please wait 15 minutes and try again."
+msgstr ""
+
+#: includes/class-shilpi-os-tracking.php:158
+msgid "Please enter your order number and the email address used at checkout."
+msgstr ""
+
+#. translators: %s: order status
+#: includes/class-shilpi-os-tracking.php:167
+#, php-format
+msgid "Order status: %s"
+msgstr ""
+
+#: includes/class-shilpi-os-tracking.php:171
+msgid "Sorry, we could not find an order matching those details. Please check and try again."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-at-port.php:31
+msgid "Your order #{order_number} has arrived in Australia"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-at-port.php:32
+msgid "Landed in Australia"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-at-port.php:33
+msgid ""
+"Hi {customer_first_name},\n"
+"\n"
+"Your order #{order_number} has arrived at the Australian port. Next it will go through customs clearance, which is a standard step for all imported goods."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-at-port.php:34
+msgid "We are getting closer. We will update you again once customs clearance begins."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-customs.php:31
+msgid "Your order #{order_number} is going through customs"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-customs.php:33
+msgid ""
+"Hi {customer_first_name},\n"
+"\n"
+"Your order #{order_number} is now with Australian customs and biosecurity for clearance. This usually takes a few business days. Once it is cleared, we will arrange delivery to your address."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-customs.php:34
+msgid "There is nothing you need to do right now. We will take care of the paperwork."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivered.php:31
+msgid "Your order #{order_number} has been delivered"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivered.php:32
+msgid "Delivered! Enjoy your new purchase"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivered.php:33
+msgid ""
+"Hi {customer_first_name},\n"
+"\n"
+"Your order #{order_number} has been delivered. Thank you for choosing {site_title}, we hope you love it.\n"
+"\n"
+"Would you mind taking a minute to leave us a review? Your feedback helps other Australians choose with confidence and means a great deal to our team."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivered.php:34
+msgid "If anything is not quite right, just reply to this email and we will sort it out."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivery.php:31
+msgid "Your order #{order_number} is out for delivery"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivery.php:32
+msgid "Your order is almost there"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivery.php:33
+msgid ""
+"Great news, {customer_first_name}! Your order #{order_number} is out for delivery to:\n"
+"\n"
+"{shipping_address}\n"
+"\n"
+"Please remember this is a large, heavy item. Someone will need to be available at the delivery address to receive it, and a clear path for unloading makes the driver's job much easier. If no one can be there, please reply to this email as soon as possible so we can make other arrangements."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-delivery.php:34
+msgid "Thank you for shopping with {site_title}."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-factory.php:31
+msgid "Your order #{order_number} has finished production"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-factory.php:32
+msgid "Production complete"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-factory.php:33
+msgid ""
+"Hi {customer_first_name},\n"
+"\n"
+"Your order #{order_number} has finished production and passed its checks at the factory. It is now being prepared for transport to our freight forwarder's warehouse, ready for shipping to Australia."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-factory.php:34
+msgid "We will be in touch again once it reaches the warehouse."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-on-ship.php:31
+msgid "Your order #{order_number} is on its way to Australia"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-on-ship.php:32
+msgid "Your order is at sea"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-on-ship.php:33
+msgid ""
+"Exciting news, {customer_first_name}! Your order #{order_number} is now on board the ship and sailing to Australia.\n"
+"\n"
+"Sea freight takes a little while, but we will let you know as soon as it reaches port. Current estimated delivery: {eta}."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-on-ship.php:34
+msgid "Thank you for your patience while your order makes its way across the ocean."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-production.php:31
+msgid "Your order #{order_number} is now in production"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-production.php:32
+msgid "Your order is being made"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-production.php:33
+msgid ""
+"Good news, {customer_first_name}! Your order #{order_number} is now in production at the factory.\n"
+"\n"
+"Our team is keeping a close eye on progress and we will let you know as soon as it is finished and ready to leave the factory."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-production.php:34
+msgid "Thanks again for your patience. Good things take a little time."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-unpaid.php:31
+msgid "We have received your order #{order_number}"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-unpaid.php:32
+msgid "Thanks for your order, {customer_first_name}"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-unpaid.php:33
+msgid ""
+"Hi {customer_first_name},\n"
+"\n"
+"Thank you for choosing {site_title}. We have received your order #{order_number} for {product_names} and we are now arranging production with our manufacturing partner.\n"
+"\n"
+"Your order is made to order and shipped by sea to Australia, so the full journey takes a number of weeks. We will email you at every step along the way, so you always know exactly where it is."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-unpaid.php:34
+msgid "If you have any questions, simply reply to this email and we will be happy to help."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-warehouse.php:31
+msgid "Your order #{order_number} is at the shipping warehouse"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-warehouse.php:32
+msgid "Ready to ship"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-warehouse.php:33
+msgid ""
+"Hi {customer_first_name},\n"
+"\n"
+"Your order #{order_number} has arrived safely at our freight forwarder's warehouse. It is being packed and booked onto the next available sailing to Australia."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage-warehouse.php:34
+msgid "We will let you know as soon as it is on board."
+msgstr ""
+
+#. translators: 1: stage number, 2: stage name
+#: includes/emails/class-shilpi-os-email-stage.php:36
+#, php-format
+msgid "Order stage %1$d: %2$s"
+msgstr ""
+
+#. translators: %s: stage name
+#: includes/emails/class-shilpi-os-email-stage.php:38
+#, php-format
+msgid "Sent to the customer when their order moves forward to \"%s\"."
+msgstr ""
+
+#. translators: %s: list of placeholders
+#: includes/emails/class-shilpi-os-email-stage.php:108
+#, php-format
+msgid "Available placeholders: %s"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage.php:119
+msgid "Message"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage.php:120
+msgid "Main text of the email, shown above the progress bar."
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage.php:157
+msgid "there"
+msgstr ""
+
+#: includes/emails/class-shilpi-os-email-stage.php:161
+msgid "to be confirmed"
+msgstr ""
+
+#: shilpi-order-stages.php:60
+msgid "Shilpi Order Stages requires WooCommerce to be installed and active."
+msgstr ""
+
+#: templates/emails/parts/shilpi-os-shipment.php:21
+msgid "Current stage"
+msgstr ""
+
+#: templates/emails/parts/shilpi-os-shipment.php:26
+msgid "Estimated delivery"
+msgstr ""
+
+#: templates/emails/parts/shilpi-os-shipment.php:27
+#: templates/emails/plain/shilpi-os-stage.php:44
+#: templates/myaccount/shilpi-os-timeline.php:22
+msgid "To be confirmed"
+msgstr ""
+
+#: templates/emails/parts/shilpi-os-shipment.php:32
+msgid "Tracking"
+msgstr ""
+
+#: templates/emails/parts/shilpi-os-shipment.php:35
+#: templates/myaccount/shilpi-os-timeline.php:29
+msgid "Track your shipment"
+msgstr ""
+
+#: templates/emails/plain/shilpi-os-stage.php:28
+msgid "Progress"
+msgstr ""
+
+#: templates/emails/plain/shilpi-os-stage.php:44
+#: templates/myaccount/shilpi-os-timeline.php:21
+msgid "Estimated delivery:"
+msgstr ""
+
+#: templates/emails/plain/shilpi-os-stage.php:49
+msgid "Tracking number:"
+msgstr ""
+
+#: templates/emails/plain/shilpi-os-stage.php:52
+msgid "Track your shipment:"
+msgstr ""
+
+#: templates/myaccount/shilpi-os-timeline.php:18
+msgid "Order progress"
+msgstr ""
+
+#: templates/myaccount/shilpi-os-timeline.php:27
+msgid "Tracking:"
+msgstr ""
+
+#: templates/myaccount/shilpi-os-timeline.php:43
+msgid "Completed"
+msgstr ""
+
+#: templates/myaccount/shilpi-os-track-form.php:18
+msgid "Enter your order number and the email address you used at checkout to see where your order is."
+msgstr ""
+
+#: templates/myaccount/shilpi-os-track-form.php:20
+msgid "Order number"
+msgstr ""
+
+#: templates/myaccount/shilpi-os-track-form.php:24
+msgid "Billing email"
+msgstr ""
+
+#: templates/myaccount/shilpi-os-track-form.php:29
+msgid "Track order"
+msgstr ""

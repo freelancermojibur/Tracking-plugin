@@ -17,6 +17,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core email hooks.
+
 echo "=================================================\n";
 echo esc_html( wp_strip_all_tags( $email_heading ) ) . "\n";
 echo "=================================================\n\n";

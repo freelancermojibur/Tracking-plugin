@@ -56,7 +56,20 @@ foreach ( Shilpi_OS_Stages::timeline( $order, $stage ) as $shilpi_os_i => $shilp
 }
 echo "\n";
 
-echo $shilpi_os_txt( __( 'Current stage:', 'shilpi-order-stages' ) . ' ' . Shilpi_OS_Stages::customer_label( $stage ) ) . "\n";
+// Same summary as the HTML email: "Step X of 9: Stage" and the next step, or "Delivered".
+$shilpi_os_steps = Shilpi_OS_Stages::timeline( $order, $stage );
+$shilpi_os_pos   = Shilpi_OS_Stages::index( $stage );
+if ( $shilpi_os_pos === count( $shilpi_os_steps ) - 1 ) {
+	echo $shilpi_os_txt( $shilpi_os_steps[ $shilpi_os_pos ]['short'] ) . "\n";
+} elseif ( $shilpi_os_pos >= 0 ) {
+	/* translators: 1: step number, 2: total steps, 3: stage name */
+	echo $shilpi_os_txt( sprintf( __( 'Step %1$d of %2$d: %3$s', 'shilpi-order-stages' ), $shilpi_os_pos + 1, count( $shilpi_os_steps ), $shilpi_os_steps[ $shilpi_os_pos ]['short'] ) ) . "\n";
+	if ( isset( $shilpi_os_steps[ $shilpi_os_pos + 1 ] ) ) {
+		/* translators: %s: next stage name */
+		echo $shilpi_os_txt( sprintf( __( 'Next: %s', 'shilpi-order-stages' ), $shilpi_os_steps[ $shilpi_os_pos + 1 ]['short'] ) ) . "\n";
+	}
+	echo "\n";
+}
 if ( 'completed' !== $stage ) {
 	$shilpi_os_eta = Shilpi_OS_Meta_Box::eta_display( $order );
 	echo $shilpi_os_txt( __( 'Estimated delivery:', 'shilpi-order-stages' ) . ' ' . ( $shilpi_os_eta ? $shilpi_os_eta : __( 'To be confirmed', 'shilpi-order-stages' ) ) ) . "\n";

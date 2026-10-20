@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 8.0
 WC tested up to: 11.2
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,9 @@ No. Uninstalling removes only the plugin settings. Order stage dates, shipment d
 Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` and must be 17 characters or less. Other hooks: `shilpi_os_stage_changed`, `shilpi_os_send_stage_email`, `shilpi_os_find_order_by_number` and `shilpi_os_settings_fields`.
 
 == Changelog ==
+
+= 1.1.4 =
+* Improved: the plain text email no longer has a "Current stage" line. Like the HTML email it shows "Step X of 9" with the next step (or "Delivered"), then Estimated delivery and Tracking.
 
 = 1.1.3 =
 * Fixed: a second copy of the plugin in another folder no longer causes a "Cannot redeclare" fatal error. The duplicate stops loading and an admin notice names the folder to delete.

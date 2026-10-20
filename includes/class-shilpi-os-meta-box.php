@@ -125,12 +125,14 @@ class Shilpi_OS_Meta_Box {
 		echo '<ol class="shilpi-os-stepper">';
 		foreach ( Shilpi_OS_Stages::timeline( $order ) as $i => $step ) {
 			$title = ( $i + 1 ) . '. ' . $step['label'];
-			if ( $step['date'] ) {
+			if ( $step['skipped'] ) {
+				$title .= ' (' . __( 'skipped', 'shilpi-order-stages' ) . ')';
+			} elseif ( $step['date'] ) {
 				$title .= ' (' . wp_date( get_option( 'date_format' ), $step['date'] ) . ')';
 			}
 			printf(
 				'<li class="is-%1$s" title="%2$s"><span class="screen-reader-text">%2$s</span></li>',
-				esc_attr( $step['state'] ),
+				esc_attr( $step['state'] . ( $step['skipped'] ? ' is-skipped' : '' ) ),
 				esc_attr( $title )
 			);
 		}

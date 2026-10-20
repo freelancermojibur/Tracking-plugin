@@ -129,6 +129,10 @@ class Shilpi_OS_Emails {
 		if ( ! $enabled || ! Shilpi_OS_Settings::enabled( 'replace_processing' ) || ! Shilpi_OS_Settings::enabled( 'auto_move' ) ) {
 			return $enabled;
 		}
+		// Without Action Scheduler there is no guarantee the auto-move (and its email) will run.
+		if ( ! function_exists( 'as_enqueue_async_action' ) ) {
+			return $enabled;
+		}
 		// Only orders that are about to be auto-moved (not orders moved back to Processing later).
 		if ( ! $order instanceof WC_Order || 'shop_order' !== $order->get_type() || $order->get_meta( '_shilpi_os_auto_moved' ) ) {
 			return $enabled;

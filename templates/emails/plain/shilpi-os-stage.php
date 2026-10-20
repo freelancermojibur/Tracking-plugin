@@ -38,14 +38,17 @@ echo $shilpi_os_txt( $message ) . "\n\n";
 
 echo $shilpi_os_txt( __( 'Progress', 'shilpi-order-stages' ) ) . "\n";
 foreach ( Shilpi_OS_Stages::timeline( $order, $stage ) as $shilpi_os_i => $shilpi_os_step ) {
-	if ( 'done' === $shilpi_os_step['state'] ) {
+	if ( ! empty( $shilpi_os_step['skipped'] ) ) {
+		$shilpi_os_mark = '[-]';
+	} elseif ( 'done' === $shilpi_os_step['state'] ) {
 		$shilpi_os_mark = '[x]';
 	} elseif ( 'current' === $shilpi_os_step['state'] ) {
 		$shilpi_os_mark = '[>]';
 	} else {
 		$shilpi_os_mark = '[ ]';
 	}
-	echo $shilpi_os_txt( $shilpi_os_mark . ' ' . ( $shilpi_os_i + 1 ) . '. ' . $shilpi_os_step['short'] ) . "\n";
+	$shilpi_os_note = ! empty( $shilpi_os_step['skipped'] ) ? ' (' . __( 'skipped', 'shilpi-order-stages' ) . ')' : '';
+	echo $shilpi_os_txt( $shilpi_os_mark . ' ' . ( $shilpi_os_i + 1 ) . '. ' . $shilpi_os_step['short'] . $shilpi_os_note ) . "\n";
 }
 echo "\n";
 

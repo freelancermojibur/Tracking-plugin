@@ -13,6 +13,36 @@ defined( 'ABSPATH' ) || exit;
 class Shilpi_OS_Stages {
 
 	/**
+	 * Depth of customer facing rendering (My Account, order received, tracking, customer emails).
+	 *
+	 * @var int
+	 */
+	private static $customer_view = 0;
+
+	/**
+	 * Start a customer facing view: order status names use the customer name.
+	 */
+	public static function begin_customer_view() {
+		++self::$customer_view;
+	}
+
+	/**
+	 * End a customer facing view.
+	 */
+	public static function end_customer_view() {
+		self::$customer_view = max( 0, self::$customer_view - 1 );
+	}
+
+	/**
+	 * Whether we are rendering a customer facing view.
+	 *
+	 * @return bool
+	 */
+	public static function in_customer_view() {
+		return self::$customer_view > 0;
+	}
+
+	/**
 	 * Get all stages in order, keyed by order status (without the "wc-" prefix).
 	 *
 	 * Each stage: label (admin), short (customer facing name), color (badge background).
@@ -156,7 +186,8 @@ class Shilpi_OS_Stages {
 	/**
 	 * Timeline steps for an order.
 	 *
-	 * Each step: key, label, short, state (done|current|upcoming), date (timestamp or null).
+	 * Each step: key, label, short, state (done|current|upcoming), date (timestamp or null),
+	 * skipped (true for a done step the order jumped over, so it has no date and no email).
 	 *
 	 * @param WC_Order    $order Order.
 	 * @param string|null $stage Stage to show as current (defaults to the order status).
@@ -176,11 +207,12 @@ class Shilpi_OS_Stages {
 				$state = 'upcoming';
 			}
 			$steps[] = array(
-				'key'   => $key,
-				'label' => $stage['label'],
-				'short' => $stage['short'],
-				'state' => $state,
-				'date'  => ( 'upcoming' !== $state && ! empty( $dates[ $key ] ) ) ? (int) $dates[ $key ] : null,
+				'key'     => $key,
+				'label'   => $stage['label'],
+				'short'   => $stage['short'],
+				'state'   => $state,
+				'date'    => ( 'upcoming' !== $state && ! empty( $dates[ $key ] ) ) ? (int) $dates[ $key ] : null,
+				'skipped' => 'done' === $state && $dates && empty( $dates[ $key ] ),
 			);
 			++$i;
 		}

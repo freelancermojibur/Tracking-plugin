@@ -23,7 +23,12 @@ $shilpi_os_font   = 'font-family:Arial, Helvetica, sans-serif;';
 	<tr>
 		<?php
 		foreach ( $shilpi_os_steps as $shilpi_os_i => $shilpi_os_step ) :
-			if ( 'done' === $shilpi_os_step['state'] ) {
+			if ( ! empty( $shilpi_os_step['skipped'] ) ) {
+				// Jumped over: shown as done but muted, with no date.
+				$shilpi_os_bg    = '#b8e0c2';
+				$shilpi_os_color = '#ffffff';
+				$shilpi_os_mark  = '&#10003;';
+			} elseif ( 'done' === $shilpi_os_step['state'] ) {
 				$shilpi_os_bg    = '#00a32a';
 				$shilpi_os_color = '#ffffff';
 				$shilpi_os_mark  = '&#10003;';
@@ -37,7 +42,7 @@ $shilpi_os_font   = 'font-family:Arial, Helvetica, sans-serif;';
 				$shilpi_os_mark  = (string) ( $shilpi_os_i + 1 );
 			}
 			?>
-			<td width="22" height="22" bgcolor="<?php echo esc_attr( $shilpi_os_bg ); ?>" align="center" valign="middle" title="<?php echo esc_attr( $shilpi_os_step['short'] ); ?>" style="width:22px; min-width:22px; max-width:22px; height:22px; padding:0; background-color:<?php echo esc_attr( $shilpi_os_bg ); ?>; color:<?php echo esc_attr( $shilpi_os_color ); ?>; border-radius:11px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:11px; font-weight:bold; line-height:22px; text-align:center;">
+			<td width="22" height="22" bgcolor="<?php echo esc_attr( $shilpi_os_bg ); ?>" align="center" valign="middle" title="<?php echo esc_attr( $shilpi_os_step['short'] . ( ! empty( $shilpi_os_step['skipped'] ) ? ' (' . __( 'skipped', 'shilpi-order-stages' ) . ')' : '' ) ); ?>" style="width:22px; min-width:22px; max-width:22px; height:22px; padding:0; background-color:<?php echo esc_attr( $shilpi_os_bg ); ?>; color:<?php echo esc_attr( $shilpi_os_color ); ?>; border-radius:11px; <?php echo esc_attr( $shilpi_os_font ); ?> font-size:11px; font-weight:bold; line-height:22px; text-align:center;">
 				<?php echo wp_kses_post( $shilpi_os_mark ); ?>
 			</td>
 			<?php if ( $shilpi_os_i < $shilpi_os_total - 1 ) : ?>

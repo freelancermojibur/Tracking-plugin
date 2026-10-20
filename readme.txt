@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 8.0
 WC tested up to: 11.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,12 @@ No. Uninstalling removes only the plugin settings. Order stage dates, shipment d
 Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` and must be 17 characters or less. Other hooks: `shilpi_os_stage_changed`, `shilpi_os_send_stage_email`, `shilpi_os_find_order_by_number` and `shilpi_os_settings_fields`.
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed: order notes written by Action Scheduler, cron, REST, WP-CLI or gateways now use admin stage names. Customer names are used only in My Account, the order received page, the tracking shortcode and customer emails.
+* New: dashboard warning when an automatic stage move is more than 15 minutes late or has failed, with a link to Scheduled Actions.
+* Improved: the core Processing email is never suppressed when Action Scheduler is unavailable.
+* Improved: stages an order jumped over are shown as "skipped" (muted, no date) in emails, My Account and the tracking page.
 
 = 1.1.0 =
 * New: setting to replace the WooCommerce Processing order email with the stage 1 email (on by default), so new customers get one email instead of two.

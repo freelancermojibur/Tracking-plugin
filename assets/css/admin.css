@@ -35,3 +35,4 @@
 .shilpi-os-pipeline a { display: block; background: #fff; border: 1px solid #c3c4c7; border-top: 3px solid #8c8f94; padding: 8px 10px; text-decoration: none; color: #1d2327; font-size: 12px; line-height: 1.3; }
 .shilpi-os-pipeline a:hover { border-color: #2271b1; }
 .shilpi-os-pipeline strong { display: block; font-size: 20px; }
+.shilpi-os-stepper li.is-skipped::after { background: #b8e0c2; }

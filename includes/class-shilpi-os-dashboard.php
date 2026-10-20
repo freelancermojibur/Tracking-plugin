@@ -196,6 +196,104 @@ class Shilpi_OS_Dashboard {
 	}
 
 	/**
+	 * Auto-move actions that are past due by more than 15 minutes, and failed ones.
+	 *
+	 * @return int[] Keys: late, failed.
+	 */
+	public static function auto_move_problems() {
+		$out = array(
+			'late'   => 0,
+			'failed' => 0,
+		);
+		if ( ! function_exists( 'as_get_scheduled_actions' ) || ! class_exists( 'ActionScheduler_Store' ) ) {
+			return $out;
+		}
+		$out['late']   = count(
+			as_get_scheduled_actions(
+				array(
+					'hook'         => Shilpi_OS_Statuses::AUTO_MOVE_HOOK,
+					'status'       => ActionScheduler_Store::STATUS_PENDING,
+					'date'         => gmdate( 'Y-m-d H:i:s', time() - 15 * MINUTE_IN_SECONDS ),
+					'date_compare' => '<=',
+					'per_page'     => 100,
+				),
+				'ids'
+			)
+		);
+		$out['failed'] = count(
+			as_get_scheduled_actions(
+				array(
+					'hook'     => Shilpi_OS_Statuses::AUTO_MOVE_HOOK,
+					'status'   => ActionScheduler_Store::STATUS_FAILED,
+					'per_page' => 100,
+				),
+				'ids'
+			)
+		);
+		return $out;
+	}
+
+	/**
+	 * Tools > Scheduled Actions filtered by the auto-move hook.
+	 *
+	 * @param string $status Action status filter.
+	 * @return string
+	 */
+	private function scheduled_actions_url( $status ) {
+		return add_query_arg(
+			array(
+				'page'   => 'wc-status',
+				'tab'    => 'action-scheduler',
+				's'      => Shilpi_OS_Statuses::AUTO_MOVE_HOOK,
+				'status' => $status,
+			),
+			admin_url( 'admin.php' )
+		);
+	}
+
+	/**
+	 * Warn when Action Scheduler is not running the auto-move.
+	 */
+	private function render_scheduler_warning() {
+		if ( ! Shilpi_OS_Settings::enabled( 'auto_move' ) ) {
+			return;
+		}
+		if ( ! function_exists( 'as_enqueue_async_action' ) ) {
+			echo '<div class="notice notice-error"><p>' . esc_html__( 'Action Scheduler is not available, so new orders are moved to the first stage straight away and the WooCommerce Processing email is not replaced.', 'shilpi-order-stages' ) . '</p></div>';
+			return;
+		}
+		$problems = self::auto_move_problems();
+		if ( $problems['late'] ) {
+			printf(
+				'<div class="notice notice-error"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
+				esc_html(
+					sprintf(
+						/* translators: %d: number of actions */
+						_n( '%d automatic stage move is more than 15 minutes late. The customer has not received an order email yet. Check that WP-Cron is running.', '%d automatic stage moves are more than 15 minutes late. These customers have not received an order email yet. Check that WP-Cron is running.', $problems['late'], 'shilpi-order-stages' ),
+						$problems['late']
+					)
+				),
+				esc_url( $this->scheduled_actions_url( 'pending' ) ),
+				esc_html__( 'View scheduled actions', 'shilpi-order-stages' )
+			);
+		}
+		if ( $problems['failed'] ) {
+			printf(
+				'<div class="notice notice-error"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
+				esc_html(
+					sprintf(
+						/* translators: %d: number of actions */
+						_n( '%d automatic stage move failed. Move the order manually and email the customer.', '%d automatic stage moves failed. Move these orders manually and email the customers.', $problems['failed'], 'shilpi-order-stages' ),
+						$problems['failed']
+					)
+				),
+				esc_url( $this->scheduled_actions_url( 'failed' ) ),
+				esc_html__( 'View failed actions', 'shilpi-order-stages' )
+			);
+		}
+	}
+
+	/**
 	 * Render the dashboard.
 	 */
 	public function render() {
@@ -242,6 +340,7 @@ class Shilpi_OS_Dashboard {
 			<a class="page-title-action" href="<?php echo esc_url( admin_url( 'admin.php?page=wc-settings&tab=shilpi_os' ) ); ?>"><?php esc_html_e( 'Settings', 'shilpi-order-stages' ); ?></a>
 			<hr class="wp-header-end" />
 			<?php
+			$this->render_scheduler_warning();
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 			if ( isset( $_GET['shilpi_os_alert'] ) ) {
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.

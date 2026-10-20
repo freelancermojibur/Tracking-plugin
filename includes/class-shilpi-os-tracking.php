@@ -25,6 +25,44 @@ class Shilpi_OS_Tracking {
 		// Alias kept for the original project specification.
 		add_shortcode( 'sk_track_order', array( $this, 'shortcode' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_assets' ) );
+
+		// Customer facing views where order status names use the customer name.
+		add_action( 'woocommerce_account_content', array( 'Shilpi_OS_Stages', 'begin_customer_view' ), 1 );
+		add_action( 'woocommerce_account_content', array( 'Shilpi_OS_Stages', 'end_customer_view' ), 999 );
+		add_action( 'woocommerce_before_thankyou', array( 'Shilpi_OS_Stages', 'begin_customer_view' ), 1 );
+		add_action( 'woocommerce_thankyou', array( 'Shilpi_OS_Stages', 'end_customer_view' ), 999 );
+		add_action( 'woocommerce_email_header', array( $this, 'email_header' ), 1, 2 );
+		add_action( 'woocommerce_email_footer', array( $this, 'email_footer' ), 999 );
+	}
+
+	/**
+	 * Emails currently rendered as customer views.
+	 *
+	 * @var int
+	 */
+	private $email_views = 0;
+
+	/**
+	 * Customer emails are customer facing views.
+	 *
+	 * @param string        $heading Heading.
+	 * @param WC_Email|null $email   Email.
+	 */
+	public function email_header( $heading, $email = null ) {
+		if ( $email instanceof WC_Email && $email->is_customer_email() ) {
+			Shilpi_OS_Stages::begin_customer_view();
+			++$this->email_views;
+		}
+	}
+
+	/**
+	 * End the customer email view.
+	 */
+	public function email_footer() {
+		if ( $this->email_views > 0 ) {
+			--$this->email_views;
+			Shilpi_OS_Stages::end_customer_view();
+		}
 	}
 
 	/**
@@ -148,6 +186,18 @@ class Shilpi_OS_Tracking {
 	 */
 	public function shortcode() {
 		wp_enqueue_style( 'shilpi-os-frontend' );
+		Shilpi_OS_Stages::begin_customer_view();
+		$html = $this->shortcode_html();
+		Shilpi_OS_Stages::end_customer_view();
+		return $html;
+	}
+
+	/**
+	 * Build the shortcode output.
+	 *
+	 * @return string
+	 */
+	private function shortcode_html() {
 
 		$error  = '';
 		$result = '';

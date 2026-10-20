@@ -155,12 +155,12 @@ class Shilpi_OS_Statuses {
 	}
 
 	/**
-	 * Screen ids of the order list and edit screens (legacy and HPOS).
+	 * Screen ids of the order list and edit screens (legacy and HPOS) and the dashboard.
 	 *
 	 * @return array
 	 */
 	public static function order_screen_ids() {
-		return array( 'edit-shop_order', 'shop_order', 'woocommerce_page_wc-orders' );
+		return array( 'edit-shop_order', 'shop_order', 'woocommerce_page_wc-orders', 'woocommerce_page_shilpi-os-dashboard' );
 	}
 
 	/**

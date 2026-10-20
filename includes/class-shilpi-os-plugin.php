@@ -35,15 +35,17 @@ final class Shilpi_OS_Plugin {
 	 * Constructor.
 	 */
 	private function __construct() {
-		spl_autoload_register( array( __CLASS__, 'autoload' ) );
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
 		new Shilpi_OS_Statuses();
 		new Shilpi_OS_Stage_Changer();
 		new Shilpi_OS_Emails();
 		new Shilpi_OS_Tracking();
+		new Shilpi_OS_Cron();
 		if ( is_admin() ) {
 			new Shilpi_OS_Meta_Box();
+			new Shilpi_OS_Settings();
+			new Shilpi_OS_Dashboard();
 		}
 	}
 
@@ -87,12 +89,13 @@ final class Shilpi_OS_Plugin {
 	 */
 	public static function activate() {
 		add_option( 'shilpi_os_settings', array() );
+		Shilpi_OS_Cron::schedule();
 	}
 
 	/**
 	 * Deactivation callback.
 	 */
 	public static function deactivate() {
-		wp_clear_scheduled_hook( 'shilpi_os_daily_overdue_check' );
+		Shilpi_OS_Cron::unschedule();
 	}
 }

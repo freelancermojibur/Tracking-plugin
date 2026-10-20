@@ -27,6 +27,7 @@ define( 'SHILPI_OS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SHILPI_OS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once SHILPI_OS_PATH . 'includes/class-shilpi-os-plugin.php';
+spl_autoload_register( array( 'Shilpi_OS_Plugin', 'autoload' ) );
 
 /**
  * Declare compatibility with WooCommerce features (HPOS).

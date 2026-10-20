@@ -59,7 +59,7 @@ echo "\n";
 // Same summary as the HTML email: "Step X of 9: Stage" and the next step, or "Delivered".
 $shilpi_os_steps = Shilpi_OS_Stages::timeline( $order, $stage );
 $shilpi_os_pos   = Shilpi_OS_Stages::index( $stage );
-if ( $shilpi_os_pos === count( $shilpi_os_steps ) - 1 ) {
+if ( count( $shilpi_os_steps ) - 1 === $shilpi_os_pos ) {
 	echo $shilpi_os_txt( $shilpi_os_steps[ $shilpi_os_pos ]['short'] ) . "\n";
 } elseif ( $shilpi_os_pos >= 0 ) {
 	/* translators: 1: step number, 2: total steps, 3: stage name */

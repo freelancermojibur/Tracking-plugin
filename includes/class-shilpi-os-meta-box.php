@@ -198,8 +198,64 @@ class Shilpi_OS_Meta_Box {
 				'decimal'   => wc_get_price_decimal_separator(),
 				'thousands' => wc_get_price_thousand_separator(),
 				'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
+				'confirm'   => $this->confirm_data(),
 			)
 		);
+	}
+
+	/**
+	 * Data for the "this will email the customer" confirmations (order screen and bulk actions).
+	 *
+	 * @return array
+	 */
+	private function confirm_data() {
+		$stages = array();
+		foreach ( Shilpi_OS_Stages::get_stages() as $key => $stage ) {
+			$stages[] = array(
+				'key'   => 'wc-' . $key,
+				'label' => $stage['label'],
+			);
+		}
+		$data = array(
+			'stages'   => $stages,
+			'order'    => null,
+			/* translators: 1: customer name, 2: order number, 3: stage name */
+			'single'   => __( 'This will email %1$s (order #%2$s) that the order is now: %3$s. Continue?', 'shilpi-order-stages' ),
+			/* translators: %d: number of skipped stages (one) */
+			'skipOne'  => __( 'This skips %d stage.', 'shilpi-order-stages' ),
+			/* translators: %d: number of skipped stages (more than one) */
+			'skipMany' => __( 'This skips %d stages.', 'shilpi-order-stages' ),
+			/* translators: %d: number of customers (one) */
+			'bulkOne'  => __( 'This will email %d customer. Continue?', 'shilpi-order-stages' ),
+			/* translators: %d: number of customers (more than one) */
+			'bulkMany' => __( 'This will email %d customers. Continue?', 'shilpi-order-stages' ),
+			'customer' => __( 'the customer', 'shilpi-order-stages' ),
+		);
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only: which order is being edited.
+		$order_id = 0;
+		if ( isset( $_GET['id'] ) ) {
+			$order_id = absint( $_GET['id'] );
+		} elseif ( isset( $_GET['post'] ) ) {
+			$order_id = absint( $_GET['post'] );
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		$order = $order_id ? wc_get_order( $order_id ) : false;
+		if ( $order instanceof WC_Order ) {
+			$name          = trim( $order->get_formatted_billing_full_name() );
+			$data['order'] = array(
+				'number' => (string) $order->get_order_number(),
+				'name'   => $name ? $name : $order->get_billing_email(),
+				'status' => 'wc-' . $order->get_status(),
+				'sent'   => array_map(
+					function ( $key ) {
+						return 'wc-' . $key;
+					},
+					array_keys( Shilpi_OS_Stage_Changer::get_sent( $order ) )
+				),
+			);
+		}
+		return $data;
 	}
 
 	/**

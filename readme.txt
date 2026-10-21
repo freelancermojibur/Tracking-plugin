@@ -6,7 +6,7 @@ Tested up to: 7.1
 Requires PHP: 7.4
 WC requires at least: 8.0
 WC tested up to: 11.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,10 @@ No. Uninstalling removes only the plugin settings. Order stage dates, shipment d
 Yes, with the `shilpi_os_stages` filter. Keys are order statuses without `wc-` and must be 17 characters or less. Other hooks: `shilpi_os_stage_changed`, `shilpi_os_send_stage_email`, `shilpi_os_find_order_by_number` and `shilpi_os_settings_fields`.
 
 == Changelog ==
+
+= 1.2.1 =
+* New: confirmation before a stage change emails a customer from the order screen ("Move to next stage" or the Status dropdown), naming the customer, order number and new stage, and how many stages are skipped.
+* New: confirmation before a "Stage: X" bulk action emails customers. The "(no email)" variants, unticked "Email the customer", backward moves and stages already emailed do not ask.
 
 = 1.2.0 =
 * New: "Tracking page" setting. Defaults to the first published page with the tracking shortcode.

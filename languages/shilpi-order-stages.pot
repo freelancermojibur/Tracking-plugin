@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shilpi Order Stages 1.2.0\n"
+"Project-Id-Version: Shilpi Order Stages 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Tracking-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-20T08:39:40+00:00\n"
+"POT-Creation-Date: 2026-10-21T05:32:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: shilpi-order-stages\n"
@@ -319,69 +319,103 @@ msgstr ""
 msgid "Email the customer about this change"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:242
+#. translators: 1: customer name, 2: order number, 3: stage name
+#: includes/class-shilpi-os-meta-box.php:223
+#, php-format
+msgid "This will email %1$s (order #%2$s) that the order is now: %3$s. Continue?"
+msgstr ""
+
+#. translators: %d: number of skipped stages (one)
+#: includes/class-shilpi-os-meta-box.php:225
+#, php-format
+msgid "This skips %d stage."
+msgstr ""
+
+#. translators: %d: number of skipped stages (more than one)
+#: includes/class-shilpi-os-meta-box.php:227
+#, php-format
+msgid "This skips %d stages."
+msgstr ""
+
+#. translators: %d: number of customers (one)
+#: includes/class-shilpi-os-meta-box.php:229
+#, php-format
+msgid "This will email %d customer. Continue?"
+msgstr ""
+
+#. translators: %d: number of customers (more than one)
+#: includes/class-shilpi-os-meta-box.php:231
+#, php-format
+msgid "This will email %d customers. Continue?"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:232
+msgid "the customer"
+msgstr ""
+
+#: includes/class-shilpi-os-meta-box.php:298
 msgid "Email the customer about the new ETA"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:249
+#: includes/class-shilpi-os-meta-box.php:305
 msgid "Profit:"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:251
+#: includes/class-shilpi-os-meta-box.php:307
 msgid "Enter the total cost to calculate profit."
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:255
+#: includes/class-shilpi-os-meta-box.php:311
 msgid "(order total minus total cost)"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:258
+#: includes/class-shilpi-os-meta-box.php:314
 msgid "Stage history"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:267
+#: includes/class-shilpi-os-meta-box.php:323
 msgid "customer emailed"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:356
+#: includes/class-shilpi-os-meta-box.php:412
 msgid "The \"Move to next stage\" button was ignored because the Status dropdown was also changed. The status you picked in the dropdown was saved."
 msgstr ""
 
 #. translators: 1: old ETA, 2: new ETA, 3: yes/no
-#: includes/class-shilpi-os-meta-box.php:395
+#: includes/class-shilpi-os-meta-box.php:451
 #, php-format
 msgid "ETA changed from %1$s to %2$s. Customer emailed: %3$s."
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:396
-#: includes/class-shilpi-os-meta-box.php:397
+#: includes/class-shilpi-os-meta-box.php:452
+#: includes/class-shilpi-os-meta-box.php:453
 msgid "not set"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:398
+#: includes/class-shilpi-os-meta-box.php:454
 #: includes/class-shilpi-os-stage-changer.php:133
 msgid "Yes"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:398
+#: includes/class-shilpi-os-meta-box.php:454
 msgid "No"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:427
+#: includes/class-shilpi-os-meta-box.php:483
 msgid "Resend current stage email to customer"
 msgstr ""
 
 #. translators: 1: stage name, 2: result
-#: includes/class-shilpi-os-meta-box.php:453
+#: includes/class-shilpi-os-meta-box.php:509
 #, php-format
 msgid "Stage email for \"%1$s\" resent manually: %2$s."
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:455
+#: includes/class-shilpi-os-meta-box.php:511
 msgid "sent"
 msgstr ""
 
-#: includes/class-shilpi-os-meta-box.php:455
+#: includes/class-shilpi-os-meta-box.php:511
 msgid "not sent (email disabled or failed)"
 msgstr ""
 

@@ -20,6 +20,51 @@ class Shilpi_OS_Emails {
 		add_filter( 'shilpi_os_send_stage_email', array( $this, 'send' ), 10, 3 );
 		add_filter( 'woocommerce_email_enabled_customer_completed_order', array( $this, 'maybe_disable_core_completed' ), 20 );
 		add_filter( 'woocommerce_email_enabled_customer_processing_order', array( $this, 'maybe_disable_core_processing' ), 20, 2 );
+		add_action( 'admin_notices', array( $this, 'saved_country_wording_notice' ) );
+	}
+
+	/**
+	 * On WooCommerce > Settings > Emails, warn when a saved stage email still mentions Australia.
+	 * Only saved settings are checked; the built-in defaults are destination neutral.
+	 */
+	public function saved_country_wording_notice() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only screen check.
+		$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		$tab  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		if ( 'wc-settings' !== $page || 'email' !== $tab || ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
+		$found = array();
+		foreach ( WC()->mailer()->get_emails() as $email ) {
+			if ( ! $email instanceof Shilpi_OS_Email_Stage ) {
+				continue;
+			}
+			$saved = get_option( 'woocommerce_' . $email->id . '_settings', array() );
+			if ( ! is_array( $saved ) ) {
+				continue;
+			}
+			foreach ( array( 'subject', 'heading', 'message', 'additional_content' ) as $field ) {
+				if ( isset( $saved[ $field ] ) && is_string( $saved[ $field ] ) && false !== stripos( $saved[ $field ], 'austral' ) ) {
+					$found[ $email->id ] = $email->get_title();
+					break;
+				}
+			}
+		}
+		if ( ! $found ) {
+			return;
+		}
+
+		echo '<div class="notice notice-warning is-dismissible"><p>' . esc_html__( 'These saved emails still mention Australia. Edit them or use Reset to default.', 'shilpi-order-stages' ) . '</p><ul style="list-style:disc; margin-left:20px;">';
+		foreach ( $found as $id => $title ) {
+			printf(
+				'<li><a href="%1$s">%2$s</a></li>',
+				esc_url( admin_url( 'admin.php?page=wc-settings&tab=email&section=' . $id ) ),
+				esc_html( $title )
+			);
+		}
+		echo '</ul></div>';
 	}
 
 	/**

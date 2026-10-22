@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Shilpi Order Stages 1.2.1\n"
+"Project-Id-Version: Shilpi Order Stages 1.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Tracking-plugin\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-21T05:32:10+00:00\n"
+"POT-Creation-Date: 2026-10-22T20:29:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: shilpi-order-stages\n"
@@ -249,6 +249,10 @@ msgstr ""
 
 #: includes/class-shilpi-os-dashboard.php:521
 msgid "Moved from Processing to the first stage from the Order Stages dashboard (no email)."
+msgstr ""
+
+#: includes/class-shilpi-os-emails.php:59
+msgid "These saved emails still mention Australia. Edit them or use Reset to default."
 msgstr ""
 
 #: includes/class-shilpi-os-meta-box.php:50
@@ -704,18 +708,18 @@ msgid "to be confirmed"
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-at-port.php:31
-msgid "Your order #{order_number} has arrived in Australia"
+msgid "Your order #{order_number} has arrived at the destination port"
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-at-port.php:32
-msgid "Landed in Australia"
+msgid "Arrived at the destination port"
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-at-port.php:33
 msgid ""
 "Hi {customer_first_name},\n"
 "\n"
-"Your order #{order_number} has arrived at the Australian port. Next it will go through customs clearance, which is a standard step for all imported goods."
+"Your order #{order_number} has arrived at the destination port. Next it will go through customs clearance, which is a standard step for all imported goods."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-at-port.php:34
@@ -730,7 +734,7 @@ msgstr ""
 msgid ""
 "Hi {customer_first_name},\n"
 "\n"
-"Your order #{order_number} is now with Australian customs and biosecurity for clearance. This usually takes a few business days. Once it is cleared, we will arrange delivery to your address."
+"Your order #{order_number} is now going through customs and border checks. This usually takes a few business days. Once it is cleared, we will arrange delivery to your address."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-customs.php:34
@@ -751,7 +755,7 @@ msgid ""
 "\n"
 "Your order #{order_number} has been delivered. Thank you for choosing {site_title}, we hope you love it.\n"
 "\n"
-"Would you mind taking a minute to leave us a review? Your feedback helps other Australians choose with confidence and means a great deal to our team."
+"Would you mind taking a minute to leave us a review? Your feedback helps other customers choose with confidence and means a great deal to our team."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-delivered.php:34
@@ -791,7 +795,7 @@ msgstr ""
 msgid ""
 "Hi {customer_first_name},\n"
 "\n"
-"Your order #{order_number} has finished production and passed its checks at the factory. It is now being prepared for transport to our freight forwarder's warehouse, ready for shipping to Australia."
+"Your order #{order_number} has finished production and passed its checks at the factory. It is now being prepared for transport to our freight forwarder's warehouse, ready for shipping to you."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-factory.php:34
@@ -799,7 +803,7 @@ msgid "We will be in touch again once it reaches the warehouse."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-on-ship.php:31
-msgid "Your order #{order_number} is on its way to Australia"
+msgid "Your order #{order_number} is on its way to you"
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-on-ship.php:32
@@ -808,7 +812,7 @@ msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-on-ship.php:33
 msgid ""
-"Exciting news, {customer_first_name}! Your order #{order_number} is now on board the ship and sailing to Australia.\n"
+"Exciting news, {customer_first_name}! Your order #{order_number} is now on board the ship and sailing to your destination.\n"
 "\n"
 "Sea freight takes a little while, but we will let you know as soon as it reaches port. Current estimated delivery: {eta}."
 msgstr ""
@@ -850,7 +854,7 @@ msgid ""
 "\n"
 "Thank you for choosing {site_title}. We have received your order #{order_number} for {product_names} and we are now arranging production with our manufacturing partner.\n"
 "\n"
-"Your order is made to order and shipped by sea to Australia, so the full journey takes a number of weeks. We will email you at every step along the way, so you always know exactly where it is."
+"Your order is made to order and shipped by sea to your destination, so the full journey takes a number of weeks. We will email you at every step along the way, so you always know exactly where it is."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-unpaid.php:34
@@ -869,7 +873,7 @@ msgstr ""
 msgid ""
 "Hi {customer_first_name},\n"
 "\n"
-"Your order #{order_number} has arrived safely at our freight forwarder's warehouse. It is being packed and booked onto the next available sailing to Australia."
+"Your order #{order_number} has arrived safely at our freight forwarder's warehouse. It is being packed and booked onto the next available sailing to your destination."
 msgstr ""
 
 #: includes/emails/class-shilpi-os-email-stage-warehouse.php:34
